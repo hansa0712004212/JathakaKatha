@@ -3,19 +3,20 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class Welcome extends StatelessWidget {
-  BuildContext defaultContext;
+class Welcome extends StatefulWidget {
+  @override
+  _WelcomeState createState() => _WelcomeState();
+}
+
+class _WelcomeState extends State<Welcome> {
+  @override
+  void initState() {
+    super.initState();
+    startTime();
+  }
 
   @override
   Widget build(BuildContext context) {
-    defaultContext = context;
-    _portraitModeOnly();
-    startTime() async {
-      var _duration = new Duration(seconds: 2);
-      return new Timer(_duration, navigationPage);
-    }
-
-    startTime();
     return Material(
         color: Colors.amber,
         shadowColor: Colors.deepOrange,
@@ -34,7 +35,7 @@ class Welcome extends StatelessWidget {
                     textDirection: TextDirection.ltr,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontSize: 64 ,
+                        fontSize: 64,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         shadows: <Shadow>[
@@ -80,7 +81,7 @@ class Welcome extends StatelessWidget {
                 ])));
   }
 
-  // blocks rotation; sets orientation to: portrait
+// blocks rotation; sets orientation to: portrait
   void _portraitModeOnly() {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -88,7 +89,7 @@ class Welcome extends StatelessWidget {
     ]);
   }
 
-  // reset rotation to system preferred
+// reset rotation to system preferred
   void _enableRotation() {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -98,7 +99,13 @@ class Welcome extends StatelessWidget {
     ]);
   }
 
+  startTime() async {
+    var duration = new Duration(seconds: 3);
+    return new Timer(duration, navigationPage);
+  }
+
   void navigationPage() {
-    // to navigate
+    _enableRotation();
+    Navigator.pushReplacementNamed(context, "/Home");
   }
 }
