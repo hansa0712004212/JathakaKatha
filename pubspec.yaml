@@ -52,6 +52,12 @@ flutter:
   assets:
     - assets/
     - assets/stories/
+    - assets/fonts/
+
+  fonts:
+    - family: IskoolaPota
+      fonts:
+        - asset: assets/fonts/iskpota.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:
