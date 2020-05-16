@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icomoon_icons/flutter_icomoon_icons.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:icon_shadow/icon_shadow.dart';
 import 'package:jathakakatha/model/Tale.dart';
 
@@ -13,8 +14,13 @@ class Story extends StatefulWidget {
 }
 
 class _State extends State<Story> {
+  static FlutterTts flutterTts;
+  static bool isSiLkPossible = false;
+  static bool isSpeaking = false;
+
   @override
   Widget build(BuildContext context) {
+    initializeTTS();
     return WillPopScope(
       child: Scaffold(
         body: Column(
@@ -47,19 +53,27 @@ class _State extends State<Story> {
                         onPressed: () => this.navigationPage(context, "Home"),
                       ),
                       new Spacer(),
-                      IconButton(
-                        icon: IconShadowWidget(
-                            Icon(IcoMoonIcons.play3, color: Colors.white),
-                            showShadow: true,
-                            shadowColor: Colors.black),
-                        color: Colors.white,
-                        onPressed: () => print("volume button pressed"),
-                      ),
+                      isSiLkPossible
+                          ? IconButton(
+                              icon: IconShadowWidget(
+                                  isSpeaking
+                                      ? Icon(IcoMoonIcons.stop2,
+                                          color: Colors.white)
+                                      : Icon(IcoMoonIcons.play3,
+                                          color: Colors.white),
+                                  showShadow: true,
+                                  shadowColor: Colors.black),
+                              color: Colors.white,
+                              splashColor: Colors.orange,
+                              onPressed: () => playTTS(widget.tale.story),
+                            )
+                          : Container(height: 0),
                       IconButton(
                         icon: IconShadowWidget(
                             Icon(IcoMoonIcons.share2, color: Colors.white),
                             shadowColor: Colors.black),
                         color: Colors.white,
+                        splashColor: Colors.orange,
                         onPressed: () => print("share button pressed"),
                       )
                     ],
@@ -114,5 +128,40 @@ class _State extends State<Story> {
 
   void navigationPage(defaultContext, screenName) {
     Navigator.of(defaultContext).pushReplacementNamed('/$screenName');
+  }
+
+  Future initializeTTS() async {
+    if (flutterTts == null) {
+      flutterTts = new FlutterTts();
+      bool isLanguageAvailable = await flutterTts.isLanguageAvailable("si-LK");
+      setState(() {
+        isSiLkPossible = isLanguageAvailable;
+      });
+
+      await flutterTts.setLanguage("si-LK");
+      await flutterTts.setSpeechRate(0.8);
+      await flutterTts.setPitch(1.2);
+      flutterTts.setCompletionHandler(() {
+        setState(() {
+          isSpeaking = false;
+        });
+      });
+    }
+  }
+
+  Future playTTS(text) async {
+    if (flutterTts != null) {
+      if (isSpeaking) {
+        setState(() {
+          isSpeaking = false;
+        });
+        flutterTts.stop();
+      } else {
+        setState(() {
+          isSpeaking = true;
+        });
+        await flutterTts.speak(text);
+      }
+    }
   }
 }
