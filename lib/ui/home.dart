@@ -23,28 +23,26 @@ class _HomeState extends State<Home> {
           ),
           backgroundColor: Colors.amber,
           leading: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+            padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
             child: Image(
                 image: AssetImage("assets/buddha_baby.png"), fit: BoxFit.cover),
           ),
           actions: <Widget>[
             IconButton(
-                iconSize: 14,
                 icon: IconShadowWidget(
                     Icon(IcoMoonIcons.history, color: Colors.white),
                     shadowColor: Colors.white),
                 color: Colors.white,
-                splashColor: Colors.deepOrange,
+                splashColor: Colors.orange,
                 onPressed: () {
                   print("IcoMoon Icon Pressed! It's Home!");
                 }),
             IconButton(
-                iconSize: 14,
                 icon: IconShadowWidget(
                     Icon(IcoMoonIcons.cog, color: Colors.white),
                     shadowColor: Colors.white),
                 color: Colors.white,
-                splashColor: Colors.deepOrange,
+                splashColor: Colors.orange,
                 onPressed: () {
                   print("IcoMoon Icon Pressed! It's Home!");
                 })
@@ -83,7 +81,10 @@ class _HomeState extends State<Home> {
               Container(
                 child: Expanded(
                   child: GridView.count(
-                      crossAxisCount: 2,
+                      crossAxisCount: MediaQuery.of(context).orientation ==
+                              Orientation.portrait
+                          ? 2
+                          : 4,
                       childAspectRatio: 1.0,
                       padding: const EdgeInsets.all(10.0),
                       mainAxisSpacing: 10.0,
