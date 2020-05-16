@@ -1,29 +1,18 @@
-# README #
+# 550 ජාතක කතා #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+ජාතක අටුවාව සිංහලයට නගමින් ලියැවුණු මහා ධර්ම ශාස්ත්‍රීය, සාහිත්‍ය ග්‍රන්ථය නම් ‘පන්සිය පනස් ජාතක පොත’ යි. 
+බුදුරජාණන් වහන්සේ විසින් දේශනා කරන ලද්දා වූ පූර්ව බෝසත් උත්පත්ති කථා වන බැවින් උත්පත්ති යන අර්ථයෙන් මේ කථා ‘ජාතක’ නම් වේ. 
+මේ සිංහල පන්සිය පනස් ජාතක පොත ලියැවී ඇත්තේ කුරුණෑගල සමයේ ය. 
+එම පොත සිංහලෙන් Android මෘදුකාංගයක් ලෙස මෙහිදී ඉදිරිපත් කරනු ලැබේ.
 
-### What is this repository for? ###
+### සහයෝගය ###
+* Android 5.0 (API 21) සිට ඉහල Android මෘදුකාංග පද්ධති
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+### සංවර්ධනය ###
+* Flutter version 1.17.0
+* Android SDK version 29.0.3
+* Android Studio version 3.6
 
-### How do I get set up? ###
-
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+### ස්තුතිය ###
+ජාතක කතා උපුටාගැනීම ශ්‍රී ජයවර්ධනපුර විශ්වවිද්‍යාල වෙබ් අඩවිය
+[https://www.sjp.ac.lk/buddhism/download-buddhist-555-jathaka-katha-free-pdf/](https://www.sjp.ac.lk/buddhism/download-buddhist-555-jathaka-katha-free-pdf)
