@@ -40,6 +40,7 @@ class _State extends State<Story> {
                       IconButton(
                         icon: IconShadowWidget(
                             Icon(IcoMoonIcons.arrowLeft2, color: Colors.white),
+                            showShadow: true,
                             shadowColor: Colors.black),
                         iconSize: 20,
                         color: Colors.white,
@@ -48,9 +49,9 @@ class _State extends State<Story> {
                       new Spacer(),
                       IconButton(
                         icon: IconShadowWidget(
-                            Icon(IcoMoonIcons.volumeHigh, color: Colors.white),
+                            Icon(IcoMoonIcons.play3, color: Colors.white),
+                            showShadow: true,
                             shadowColor: Colors.black),
-                        iconSize: 20,
                         color: Colors.white,
                         onPressed: () => print("volume button pressed"),
                       ),
@@ -58,7 +59,6 @@ class _State extends State<Story> {
                         icon: IconShadowWidget(
                             Icon(IcoMoonIcons.share2, color: Colors.white),
                             shadowColor: Colors.black),
-                        iconSize: 20,
                         color: Colors.white,
                         onPressed: () => print("share button pressed"),
                       )

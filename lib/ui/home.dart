@@ -17,7 +17,7 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            "550 ජාතක කථා",
+            "550 ජාතක කතා",
             textDirection: TextDirection.ltr,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
@@ -31,6 +31,7 @@ class _HomeState extends State<Home> {
             IconButton(
                 icon: IconShadowWidget(
                     Icon(IcoMoonIcons.history, color: Colors.white),
+                    showShadow: false,
                     shadowColor: Colors.white),
                 color: Colors.white,
                 splashColor: Colors.orange,
@@ -40,6 +41,7 @@ class _HomeState extends State<Home> {
             IconButton(
                 icon: IconShadowWidget(
                     Icon(IcoMoonIcons.cog, color: Colors.white),
+                    showShadow: false,
                     shadowColor: Colors.white),
                 color: Colors.white,
                 splashColor: Colors.orange,
