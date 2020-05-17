@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_icomoon_icons/flutter_icomoon_icons.dart';
 import 'package:icon_shadow/icon_shadow.dart';
 import 'package:jathakakatha/data/sinhala.dart';
@@ -17,34 +18,34 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            "550 ජාතක කතා",
+            "$constPansiyaPanas $constAppName",
             textDirection: TextDirection.ltr,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: constFontSizeTitle, fontWeight: FontWeight.bold),
           ),
-          backgroundColor: Colors.amber,
+          backgroundColor: constColorPrimary,
           leading: Padding(
-            padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-            child: Image(
-                image: AssetImage("assets/buddha_baby.png"), fit: BoxFit.cover),
+            padding: EdgeInsets.fromLTRB(constPaddingSpace, 0, 0, 0),
+            child: Image(image: constImageAppIcon, fit: BoxFit.cover),
           ),
           actions: <Widget>[
             IconButton(
                 icon: IconShadowWidget(
-                    Icon(IcoMoonIcons.history, color: Colors.white),
+                    Icon(IcoMoonIcons.history, color: constColorIcon),
                     showShadow: false,
-                    shadowColor: Colors.white),
-                color: Colors.white,
-                splashColor: Colors.orange,
+                    shadowColor: constColorIcon),
+                color: constColorIcon,
+                splashColor: constColorIconSplash,
                 onPressed: () {
                   print("IcoMoon Icon Pressed! It's Home!");
                 }),
             IconButton(
                 icon: IconShadowWidget(
-                    Icon(IcoMoonIcons.cog, color: Colors.white),
+                    Icon(IcoMoonIcons.cog, color: constColorIcon),
                     showShadow: false,
-                    shadowColor: Colors.white),
-                color: Colors.white,
-                splashColor: Colors.orange,
+                    shadowColor: constColorIcon),
+                color: constColorIcon,
+                splashColor: constColorIconSplash,
                 onPressed: () {
                   print("IcoMoon Icon Pressed! It's Home!");
                 })
@@ -55,29 +56,36 @@ class _HomeState extends State<Home> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: EdgeInsets.all(constPaddingSpace),
                 child: TextField(
                   decoration: InputDecoration(
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                          borderSide:
-                              BorderSide(width: 0.8, color: Colors.amber)),
-                      hintText: "Search",
-                      fillColor: Colors.white,
+                          borderRadius:
+                              BorderRadius.circular(constBorderRadius),
+                          borderSide: BorderSide(
+                              width: constBorderWidth,
+                              color: constColorPrimary)),
+                      hintText: constSearch,
+                      fillColor: constColorDefaultFill,
                       filled: true,
-                      contentPadding: EdgeInsets.symmetric(vertical: 10),
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: constTextContentPadding),
                       enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                          borderSide:
-                              BorderSide(width: 0.8, color: Colors.grey)),
+                          borderRadius:
+                              BorderRadius.circular(constBorderRadius),
+                          borderSide: BorderSide(
+                              width: constBorderWidth,
+                              color: constColorDefaultDisabled)),
                       focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                          borderSide:
-                              BorderSide(width: 0.8, color: Colors.amber)),
+                          borderRadius:
+                              BorderRadius.circular(constBorderRadius),
+                          borderSide: BorderSide(
+                              width: constBorderWidth,
+                              color: constColorPrimary)),
                       prefixIcon: Icon(IcoMoonIcons.search,
-                          size: 20, color: Colors.amber),
+                          size: constIconSize, color: constColorPrimary),
                       suffixIcon: Icon(IcoMoonIcons.cross,
-                          size: 20, color: Colors.amber)),
+                          size: constIconSize, color: constColorPrimary)),
                 ),
               ),
               Container(
@@ -87,56 +95,57 @@ class _HomeState extends State<Home> {
                               Orientation.portrait
                           ? 2
                           : 4,
-                      childAspectRatio: 1.0,
-                      padding: const EdgeInsets.all(10.0),
-                      mainAxisSpacing: 10.0,
-                      crossAxisSpacing: 10.0,
+                      childAspectRatio: 2,
+                      padding: EdgeInsets.all(constPaddingSpace),
+                      mainAxisSpacing: constPaddingSpace,
+                      crossAxisSpacing: constPaddingSpace,
                       children: tales.map((Tale tale) {
-                        return GridTile(
-                            header: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                tale.id.toString(),
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    shadows: <Shadow>[
-                                      Shadow(
-                                        offset: Offset(1.0, 2.5),
-                                        blurRadius: 1.5,
-                                        color: Color.fromARGB(255, 0, 0, 0),
-                                      )
-                                    ]),
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => Story(tale: tale)));
+                          },
+                          child: GridTile(
+                              header: Padding(
+                                padding: EdgeInsets.all(constPaddingSpace),
+                                child: Text(
+                                  tale.id.toString(),
+                                  style: TextStyle(
+                                      color: constColorDefaultText,
+                                      fontSize: constFontSizeTileIndex,
+                                      fontWeight: FontWeight.bold,
+                                      shadows: <Shadow>[
+                                        Shadow(
+                                          offset: Offset(1.0, 2.5),
+                                          blurRadius: 1.5,
+                                          color: constColorIconShadow,
+                                        )
+                                      ]),
+                                ),
                               ),
-                            ),
-                            footer: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                tale.title,
-                                textAlign: TextAlign.end,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    shadows: <Shadow>[
-                                      Shadow(
-                                        offset: Offset(1.0, 2.5),
-                                        blurRadius: 1.5,
-                                        color: Color.fromARGB(255, 0, 0, 0),
-                                      )
-                                    ]),
+                              footer: Padding(
+                                padding: EdgeInsets.all(constPaddingSpace),
+                                child: Text(
+                                  tale.title,
+                                  textAlign: TextAlign.end,
+                                  style: TextStyle(
+                                      color: constColorDefaultText,
+                                      fontSize: constFontSizeTileTitle,
+                                      fontWeight: FontWeight.bold,
+                                      shadows: <Shadow>[
+                                        Shadow(
+                                          offset: Offset(1.0, 2.5),
+                                          blurRadius: 1.5,
+                                          color: constColorIconShadow,
+                                        )
+                                      ]),
+                                ),
                               ),
-                            ),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => Story(tale: tale)));
-                              },
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius:
+                                    BorderRadius.circular(constBorderRadius),
                                 child: Hero(
                                   tag: tale.id,
                                   child: Image(
@@ -144,8 +153,8 @@ class _HomeState extends State<Home> {
                                     fit: BoxFit.cover,
                                   ),
                                 ),
-                              ),
-                            ));
+                              )),
+                        );
                       }).toList()),
                 ),
               ),
@@ -157,15 +166,16 @@ class _HomeState extends State<Home> {
       onWillPop: () => showDialog<bool>(
         context: context,
         builder: (c) => AlertDialog(
-          title: Text('Exit'),
-          content: Text('Do you really want to exit ?'),
+          title: Text(constExit),
+          content: Text(constExitConfirmMessage),
           actions: [
             FlatButton(
-              child: Text('Yes'),
-              onPressed: () => Navigator.pop(c, true),
+              child: Text(constYes),
+              onPressed: () =>
+                  SystemChannels.platform.invokeMethod('SystemNavigator.pop'),
             ),
             FlatButton(
-              child: Text('No'),
+              child: Text(constNo),
               onPressed: () => Navigator.pop(c, false),
             ),
           ],

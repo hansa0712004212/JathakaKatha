@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icomoon_icons/flutter_icomoon_icons.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:icon_shadow/icon_shadow.dart';
+import 'package:jathakakatha/data/sinhala.dart';
 import 'package:jathakakatha/model/Tale.dart';
 
 class Story extends StatefulWidget {
@@ -40,65 +41,80 @@ class _State extends State<Story> {
                       const EdgeInsets.symmetric(horizontal: 5, vertical: 26),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    //change here don't //worked
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      IconButton(
-                        icon: IconShadowWidget(
-                            Icon(IcoMoonIcons.arrowLeft2, color: Colors.white),
-                            showShadow: true,
-                            shadowColor: Colors.black),
-                        iconSize: 20,
-                        color: Colors.white,
-                        onPressed: () => this.navigationPage(context, "Home"),
+                      new Material(
+                        color: constColorTransparent,
+                        child: IconButton(
+                          icon: IconShadowWidget(
+                              Icon(IcoMoonIcons.arrowLeft2,
+                                  color: constColorIcon),
+                              showShadow: true,
+                              shadowColor: constColorIconShadow),
+                          iconSize: constIconSize,
+                          color: constColorIcon,
+                          splashColor: constColorIconSplash,
+                          onPressed: () => this.navigationPage(context, "Home"),
+                        ),
                       ),
                       new Spacer(),
                       isSiLkPossible
-                          ? IconButton(
-                              icon: IconShadowWidget(
-                                  isSpeaking
-                                      ? Icon(IcoMoonIcons.stop2,
-                                          color: Colors.white)
-                                      : Icon(IcoMoonIcons.play3,
-                                          color: Colors.white),
-                                  showShadow: true,
-                                  shadowColor: Colors.black),
-                              color: Colors.white,
-                              splashColor: Colors.orange,
-                              onPressed: () => playTTS(widget.tale.story),
+                          ? new Material(
+                              color: constColorTransparent,
+                              child: IconButton(
+                                icon: IconShadowWidget(
+                                    isSpeaking
+                                        ? Icon(IcoMoonIcons.stop2,
+                                            color: constColorIcon)
+                                        : Icon(IcoMoonIcons.play3,
+                                            color: constColorIcon),
+                                    showShadow: true,
+                                    shadowColor: constColorIconShadow),
+                                color: constColorIcon,
+                                splashColor: constColorIconSplash,
+                                onPressed: () =>
+                                    playTTS(widget.tale.story.substring(0, 80)),
+                              ),
                             )
                           : Container(height: 0),
-                      IconButton(
-                        icon: IconShadowWidget(
-                            Icon(IcoMoonIcons.share2, color: Colors.white),
-                            shadowColor: Colors.black),
-                        color: Colors.white,
-                        splashColor: Colors.orange,
-                        onPressed: () => print("share button pressed"),
+                      new Material(
+                        color: constColorTransparent,
+                        child: IconButton(
+                          icon: IconShadowWidget(
+                              Icon(IcoMoonIcons.share2, color: constColorIcon),
+                              showShadow: true,
+                              shadowColor: constColorIconShadow),
+                          color: constColorIcon,
+                          splashColor: constColorIconSplash,
+                          onPressed: () => print("share button pressed"),
+                        ),
                       )
                     ],
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 180, 0, 0),
+                  padding: EdgeInsets.fromLTRB(constPaddingSpace, 180, 0, 0),
                   child: Column(
                     children: <Widget>[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Text(
-                            "${widget.tale.id}. ${widget.tale.title}",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                shadows: <Shadow>[
-                                  Shadow(
-                                    offset: Offset(1.0, 2.5),
-                                    blurRadius: 1.5,
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                  )
-                                ]),
+                          new Flexible(
+                            child: Text(
+                              "${widget.tale.id}. ${widget.tale.title}",
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  color: constColorDefaultText,
+                                  fontSize: constFontSizeTileIndex,
+                                  fontWeight: FontWeight.bold,
+                                  shadows: <Shadow>[
+                                    Shadow(
+                                      offset: Offset(1.0, 2.5),
+                                      blurRadius: 1.5,
+                                      color: constColorIconShadow,
+                                    )
+                                  ]),
+                            ),
                           ),
                         ],
                       )
@@ -109,10 +125,11 @@ class _State extends State<Story> {
             ),
             Flexible(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  padding: EdgeInsets.fromLTRB(constPaddingSpace,
+                      constPaddingSpace, constPaddingSpace, constPaddingSpace),
                   child: SingleChildScrollView(
                       child: Text("${widget.tale.story}\n",
-                          style: TextStyle(fontSize: 14),
+                          style: TextStyle(fontSize: constFontSizeStory),
                           textAlign: TextAlign.justify)),
                 ),
                 fit: FlexFit.tight,
@@ -133,12 +150,13 @@ class _State extends State<Story> {
   Future initializeTTS() async {
     if (flutterTts == null) {
       flutterTts = new FlutterTts();
-      bool isLanguageAvailable = await flutterTts.isLanguageAvailable("si-LK");
+      bool isLanguageAvailable =
+          await flutterTts.isLanguageAvailable(constTtsLanguage);
       setState(() {
         isSiLkPossible = isLanguageAvailable;
       });
 
-      await flutterTts.setLanguage("si-LK");
+      await flutterTts.setLanguage(constTtsLanguage);
       await flutterTts.setSpeechRate(0.8);
       await flutterTts.setPitch(1.2);
       flutterTts.setCompletionHandler(() {

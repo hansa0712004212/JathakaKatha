@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:jathakakatha/data/sinhala.dart';
 
 class Welcome extends StatefulWidget {
   @override
@@ -18,20 +19,19 @@ class _WelcomeState extends State<Welcome> {
   @override
   Widget build(BuildContext context) {
     return Material(
-        color: Colors.amber,
-        shadowColor: Colors.deepOrange,
+        color: constColorPrimary,
+        shadowColor: constColorSecondary,
         child: Container(
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage("assets/lord-buddha.jpg"),
-                    fit: BoxFit.cover)),
+                    image: constWelcomeBackgroundImage, fit: BoxFit.cover)),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Text(
-                    "550",
+                    "$constPansiyaPanas",
                     textDirection: TextDirection.ltr,
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -42,23 +42,23 @@ class _WelcomeState extends State<Welcome> {
                           Shadow(
                             offset: Offset(1.0, 3),
                             blurRadius: 4.0,
-                            color: Color.fromARGB(255, 255, 191, 0),
+                            color: constColorSplashNumberTitle,
                           )
                         ]),
                   ),
                   Text(
-                    "ජාතක කතා",
+                    "$constAppName",
                     textDirection: TextDirection.ltr,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 54,
-                        color: Colors.white,
+                        color: constColorDefaultText,
                         fontWeight: FontWeight.bold,
                         shadows: <Shadow>[
                           Shadow(
                             offset: Offset(1.0, 3),
                             blurRadius: 4.0,
-                            color: Color.fromARGB(230, 255, 0, 127),
+                            color: constColorSplashTextTitle,
                           )
                         ]),
                   ),
@@ -68,13 +68,13 @@ class _WelcomeState extends State<Welcome> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 18,
-                        color: Colors.white,
+                        color: constColorDefaultText,
                         fontWeight: FontWeight.bold,
                         shadows: <Shadow>[
                           Shadow(
                             offset: Offset(1.0, 3),
                             blurRadius: 4.0,
-                            color: Color.fromARGB(230, 255, 0, 127),
+                            color: constColorSplashTextTitle,
                           )
                         ]),
                   )
