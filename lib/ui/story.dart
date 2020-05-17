@@ -159,6 +159,11 @@ class _State extends State<Story> {
       await flutterTts.setLanguage(constTtsLanguage);
       await flutterTts.setSpeechRate(0.8);
       await flutterTts.setPitch(1.2);
+      flutterTts.setStartHandler(() {
+        setState(() {
+          isSpeaking = true;
+        });
+      });
       flutterTts.setCompletionHandler(() {
         if (widget.tale.story.length <= constTtsMaxLength) {
           setState(() {
@@ -187,6 +192,11 @@ class _State extends State<Story> {
           });
         }
       });
+      flutterTts.setErrorHandler((msg) {
+        setState(() {
+          isSpeaking = false;
+        });
+      });
     }
   }
 
@@ -198,10 +208,6 @@ class _State extends State<Story> {
         });
         flutterTts.stop();
       } else {
-        setState(() {
-          isSpeaking = true;
-        });
-
         if (text.length <= constTtsMaxLength) {
           await flutterTts.speak(text);
         } else {
