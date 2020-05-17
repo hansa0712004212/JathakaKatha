@@ -18,6 +18,7 @@ class _State extends State<Story> {
   static FlutterTts flutterTts;
   static bool isSiLkPossible = false;
   static bool isSpeaking = false;
+  static int currentTtsPart = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -72,8 +73,7 @@ class _State extends State<Story> {
                                     shadowColor: constColorIconShadow),
                                 color: constColorIcon,
                                 splashColor: constColorIconSplash,
-                                onPressed: () =>
-                                    playTTS(widget.tale.story.substring(0, 80)),
+                                onPressed: () => playTTS(widget.tale.story),
                               ),
                             )
                           : Container(height: 0),
@@ -160,14 +160,37 @@ class _State extends State<Story> {
       await flutterTts.setSpeechRate(0.8);
       await flutterTts.setPitch(1.2);
       flutterTts.setCompletionHandler(() {
-        setState(() {
-          isSpeaking = false;
-        });
+        if (widget.tale.story.length <= constTtsMaxLength) {
+          setState(() {
+            isSpeaking = false;
+          });
+        } else {
+          int nextTargetIndex = 0;
+          int storyLength = widget.tale.story.length;
+          int noOfPartsPossible = (storyLength / constTtsMaxLength).ceil();
+          if (noOfPartsPossible == currentTtsPart + 1) {
+            nextTargetIndex = widget.tale.story.length;
+          } else if (noOfPartsPossible < currentTtsPart + 1) {
+            setState(() {
+              isSpeaking = false;
+            });
+            return;
+          } else {
+            nextTargetIndex =
+                (constTtsMaxLength * currentTtsPart) + constTtsMaxLength;
+          }
+
+          flutterTts.speak(widget.tale.story.substring(
+              (constTtsMaxLength * currentTtsPart), nextTargetIndex));
+          setState(() {
+            currentTtsPart = currentTtsPart + 1;
+          });
+        }
       });
     }
   }
 
-  Future playTTS(text) async {
+  Future playTTS(String text) async {
     if (flutterTts != null) {
       if (isSpeaking) {
         setState(() {
@@ -178,7 +201,16 @@ class _State extends State<Story> {
         setState(() {
           isSpeaking = true;
         });
-        await flutterTts.speak(text);
+
+        if (text.length <= constTtsMaxLength) {
+          await flutterTts.speak(text);
+        } else {
+          var parts = (text.length / constTtsMaxLength);
+          flutterTts.speak(text.substring(0, constTtsMaxLength));
+          setState(() {
+            currentTtsPart = 1;
+          });
+        }
       }
     }
   }
