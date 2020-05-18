@@ -101,8 +101,10 @@ class _HomeState extends State<Home> {
                               color: constColorPrimary)),
                       prefixIcon: Icon(IcoMoonIcons.search,
                           size: constIconSize, color: constColorPrimary),
-                      suffixIcon: Icon(IcoMoonIcons.cross,
-                          size: constIconSize, color: constColorPrimary)),
+                      suffixIcon: IconButton(
+                          icon: Icon(IcoMoonIcons.cross,
+                              size: constIconSize, color: constColorPrimary),
+                          onPressed: clearSearch)),
                   onChanged: (String searchKey) async {
                     setState(() {
                       _searchKey = searchKey;
@@ -218,5 +220,12 @@ class _HomeState extends State<Home> {
     } else {
       return tales;
     }
+  }
+
+  void clearSearch() {
+    _searchTextController.clear();
+    setState(() {
+      _searchKey = "";
+    });
   }
 }
