@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_icomoon_icons/flutter_icomoon_icons.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -19,6 +21,27 @@ class _State extends State<Story> {
   static bool isSiLkPossible = false;
   static bool isSpeaking = false;
   static int currentTtsPart = 0;
+  static int currentUtterIndex = 0;
+  static bool isPaused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    initializeTTS();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (flutterTts != null) {
+      flutterTts.stop();
+      flutterTts = null;
+      isSpeaking = false;
+      currentTtsPart = 0;
+      currentUtterIndex = 0;
+      isPaused = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +82,24 @@ class _State extends State<Story> {
                         ),
                       ),
                       new Spacer(),
+                      isSiLkPossible && isSpeaking
+                          ? new Material(
+                              color: constColorTransparent,
+                              child: IconButton(
+                                icon: IconShadowWidget(
+                                    Icon(
+                                        isPaused
+                                            ? IcoMoonIcons.play3
+                                            : IcoMoonIcons.pause2,
+                                        color: constColorIcon),
+                                    showShadow: true,
+                                    shadowColor: constColorIconShadow),
+                                color: constColorIcon,
+                                splashColor: constColorIconSplash,
+                                onPressed: () => pauseTTS(),
+                              ),
+                            )
+                          : Container(height: 0),
                       isSiLkPossible
                           ? new Material(
                               color: constColorTransparent,
@@ -73,7 +114,8 @@ class _State extends State<Story> {
                                     shadowColor: constColorIconShadow),
                                 color: constColorIcon,
                                 splashColor: constColorIconSplash,
-                                onPressed: () => playTTS(widget.tale.story),
+                                onPressed: () =>
+                                    isSpeaking ? stopTTS() : playTTS(),
                               ),
                             )
                           : Container(height: 0),
@@ -154,6 +196,8 @@ class _State extends State<Story> {
           await flutterTts.isLanguageAvailable(constTtsLanguage);
       setState(() {
         isSiLkPossible = isLanguageAvailable;
+        currentUtterIndex = 0;
+        currentTtsPart = 0;
       });
 
       await flutterTts.setLanguage(constTtsLanguage);
@@ -162,6 +206,13 @@ class _State extends State<Story> {
       flutterTts.setStartHandler(() {
         setState(() {
           isSpeaking = true;
+        });
+      });
+      flutterTts.setProgressHandler(
+          (String text, int startOffset, int endOffset, String word) {
+        setState(() {
+          currentUtterIndex =
+              ((currentTtsPart - 1) * constTtsMaxLength) + startOffset;
         });
       });
       flutterTts.setCompletionHandler(() {
@@ -195,29 +246,70 @@ class _State extends State<Story> {
       flutterTts.setErrorHandler((msg) {
         setState(() {
           isSpeaking = false;
+          currentTtsPart = 0;
+          isPaused = false;
+          currentUtterIndex = 0;
         });
       });
     }
   }
 
-  Future playTTS(String text) async {
+  Future playTTS() async {
     if (flutterTts != null) {
-      if (isSpeaking) {
+      if (isPaused) {
         setState(() {
-          isSpeaking = false;
+          isPaused = false;
+          isSpeaking = true;
         });
-        flutterTts.stop();
+        try {
+          if ((widget.tale.story.length / constTtsMaxLength).ceil() ==
+              (currentTtsPart / 1.0)) {
+            await flutterTts
+                .speak(widget.tale.story.substring(currentUtterIndex));
+          } else {
+            await flutterTts.speak(widget.tale.story.substring(
+                currentUtterIndex, (currentTtsPart) * constTtsMaxLength));
+          }
+        } catch (e) {
+          await stopTTS();
+        }
       } else {
-        if (text.length <= constTtsMaxLength) {
-          await flutterTts.speak(text);
+        if (widget.tale.story.length <= constTtsMaxLength) {
+          await flutterTts.speak(widget.tale.story);
         } else {
-          var parts = (text.length / constTtsMaxLength);
-          flutterTts.speak(text.substring(0, constTtsMaxLength));
+          flutterTts.speak(widget.tale.story.substring(0, constTtsMaxLength));
           setState(() {
             currentTtsPart = 1;
           });
         }
       }
     }
+  }
+
+  Future pauseTTS() async {
+    if (isPaused) {
+      await playTTS();
+    } else {
+      setState(() {
+        isPaused = true;
+      });
+      if (Platform.isIOS) {
+        flutterTts.pause();
+      } else {
+        flutterTts.stop();
+      }
+    }
+  }
+
+  Future stopTTS() async {
+    if (flutterTts != null) {
+      flutterTts.stop();
+    }
+    setState(() {
+      isPaused = false;
+      isSpeaking = false;
+      currentTtsPart = 0;
+      currentUtterIndex = 0;
+    });
   }
 }
