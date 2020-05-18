@@ -33,7 +33,6 @@ class _State extends State<Story> {
 
   @override
   void dispose() {
-    super.dispose();
     if (flutterTts != null) {
       flutterTts.stop();
       flutterTts = null;
@@ -42,6 +41,7 @@ class _State extends State<Story> {
       currentUtterIndex = 0;
       isPaused = false;
     }
+    super.dispose();
   }
 
   @override

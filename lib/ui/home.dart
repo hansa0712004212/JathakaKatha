@@ -12,6 +12,22 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  TextEditingController _searchTextController;
+  String _searchKey = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _searchKey = "";
+    _searchTextController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _searchTextController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -58,6 +74,7 @@ class _HomeState extends State<Home> {
               Padding(
                 padding: EdgeInsets.all(constPaddingSpace),
                 child: TextField(
+                  controller: _searchTextController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderRadius:
@@ -86,6 +103,11 @@ class _HomeState extends State<Home> {
                           size: constIconSize, color: constColorPrimary),
                       suffixIcon: Icon(IcoMoonIcons.cross,
                           size: constIconSize, color: constColorPrimary)),
+                  onChanged: (String searchKey) async {
+                    setState(() {
+                      _searchKey = searchKey;
+                    });
+                  },
                 ),
               ),
               Container(
@@ -99,7 +121,7 @@ class _HomeState extends State<Home> {
                       padding: EdgeInsets.all(constPaddingSpace),
                       mainAxisSpacing: constPaddingSpace,
                       crossAxisSpacing: constPaddingSpace,
-                      children: tales.map((Tale tale) {
+                      children: getTales().map((Tale tale) {
                         return GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -182,5 +204,19 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
+  }
+
+  List<Tale> getTales() {
+    if (_searchKey.length > 0) {
+      List<Tale> filtered = tales
+          .where((Tale tale) => tale.tags
+              .toString()
+              .toLowerCase()
+              .contains(_searchKey.toLowerCase()))
+          .toList();
+      return filtered;
+    } else {
+      return tales;
+    }
   }
 }
