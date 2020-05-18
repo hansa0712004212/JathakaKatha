@@ -6,6 +6,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:icon_shadow/icon_shadow.dart';
 import 'package:jathakakatha/data/sinhala.dart';
 import 'package:jathakakatha/model/Tale.dart';
+import 'package:share/share.dart';
 
 class Story extends StatefulWidget {
   final Tale tale;
@@ -128,7 +129,7 @@ class _State extends State<Story> {
                               shadowColor: constColorIconShadow),
                           color: constColorIcon,
                           splashColor: constColorIconSplash,
-                          onPressed: () => print("share button pressed"),
+                          onPressed: () => shareStory(),
                         ),
                       )
                     ],
@@ -311,5 +312,12 @@ class _State extends State<Story> {
       currentTtsPart = 0;
       currentUtterIndex = 0;
     });
+  }
+
+  Future shareStory() async {
+    final RenderBox box = context.findRenderObject();
+    Share.share("${widget.tale.title}\n\n${widget.tale.story}\n\n$constPansiyaPanas $constAppName\n\nhttps://play.google.com/store/apps/details?id=com.sahassoft.jathakakatha",
+        subject: "${widget.tale.title}",
+        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 }
