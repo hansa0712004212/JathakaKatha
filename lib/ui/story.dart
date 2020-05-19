@@ -180,8 +180,9 @@ class _State extends State<Story> {
           ],
         ),
       ),
-      onWillPop: () {
+      onWillPop: () async {
         navigationPage(context, "Home");
+        return true;
       },
     );
   }
