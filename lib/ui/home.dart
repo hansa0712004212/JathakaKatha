@@ -117,6 +117,7 @@ class _HomeState extends State<Home> {
                   onChanged: (String searchKey) async {
                     setState(() {
                       _searchKey = searchKey;
+                      _isRecentEnabled = false;
                     });
                   },
                 ),
