@@ -130,6 +130,10 @@ final double constFontSizeTitle = 24;
 final double constFontSizeTileIndex = 24;
 final double constFontSizeTileTitle = 20;
 final double constFontSizeStory = 16;
+final double constFontSizeBody = 16;
+
+const double constFontSizeStoryMax = 28;
+const double constFontSizeStoryMin = 12;
 
 // Border Sizes
 final double constBorderRadius = 10;

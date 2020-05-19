@@ -4,6 +4,7 @@ import 'package:flutter_icomoon_icons/flutter_icomoon_icons.dart';
 import 'package:icon_shadow/icon_shadow.dart';
 import 'package:jathakakatha/data/sinhala.dart';
 import 'package:jathakakatha/model/Tale.dart';
+import 'package:jathakakatha/ui/settings.dart';
 import 'package:jathakakatha/ui/story.dart';
 
 class Home extends StatefulWidget {
@@ -63,7 +64,8 @@ class _HomeState extends State<Home> {
                 color: constColorIcon,
                 splashColor: constColorIconSplash,
                 onPressed: () {
-                  print("IcoMoon Icon Pressed! It's Home!");
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (_) => Settings()));
                 })
           ],
         ),
