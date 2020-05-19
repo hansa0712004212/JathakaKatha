@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_icomoon_icons/flutter_icomoon_icons.dart';
 import 'package:icon_shadow/icon_shadow.dart';
 import 'package:jathakakatha/data/sinhala.dart';
+import 'package:jathakakatha/model/AppPreference.dart';
 import 'package:jathakakatha/model/Tale.dart';
 import 'package:jathakakatha/ui/story.dart';
 
@@ -14,12 +15,24 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   TextEditingController _searchTextController;
   String _searchKey = "";
+  List<String> _recentIds;
+  bool _isRecentEnabled = false;
+  AppPreference appPreference;
 
   @override
   void initState() {
     super.initState();
     _searchKey = "";
+    _isRecentEnabled = false;
     _searchTextController = TextEditingController();
+    getSharedPreferences();
+  }
+
+  Future<Null> getSharedPreferences() async {
+    appPreference = await AppPreference.getInstance();
+    setState(() {
+      _recentIds = appPreference.recentIds;
+    });
   }
 
   @override
@@ -47,13 +60,19 @@ class _HomeState extends State<Home> {
           actions: <Widget>[
             IconButton(
                 icon: IconShadowWidget(
-                    Icon(IcoMoonIcons.history, color: constColorIcon),
+                    Icon(
+                        _isRecentEnabled
+                            ? IcoMoonIcons.list2
+                            : IcoMoonIcons.history,
+                        color: constColorIcon),
                     showShadow: false,
                     shadowColor: constColorIcon),
                 color: constColorIcon,
                 splashColor: constColorIconSplash,
                 onPressed: () {
-                  print("IcoMoon Icon Pressed! It's Home!");
+                  setState(() {
+                    _isRecentEnabled = !_isRecentEnabled;
+                  });
                 })
           ],
         ),
@@ -207,6 +226,13 @@ class _HomeState extends State<Home> {
               .contains(_searchKey.toLowerCase()))
           .toList();
       return filtered;
+    } else if (_isRecentEnabled) {
+      List<Tale> recentList = [];
+      _recentIds.forEach((id) {
+        Tale recentTale = tales.firstWhere((tale) => tale.id == int.parse(id));
+        recentList.add(recentTale);
+      });
+      return recentList.reversed.toList();
     } else {
       return tales;
     }

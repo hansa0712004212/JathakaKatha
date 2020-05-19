@@ -45,6 +45,7 @@ class _State extends State<Story> {
       _fontSizeStory = appPreference.storyFontSize;
       _ttsSpeed = appPreference.ttsSpeed;
     });
+    _updateRecentList();
   }
 
   @override
@@ -443,7 +444,7 @@ class _State extends State<Story> {
       _ttsSpeed = appPreference.ttsSpeed;
     });
   }
-  
+
   void _cancelPreferences() {
     _resetPreferences();
     setState(() {
@@ -457,6 +458,11 @@ class _State extends State<Story> {
     setState(() {
       _isBottomSheetVisible = false;
     });
+    appPreference.flushAppPreferences();
+  }
+
+  void _updateRecentList() {
+    appPreference.updateRecent(widget.tale.id);
     appPreference.flushAppPreferences();
   }
 
@@ -582,5 +588,4 @@ class _State extends State<Story> {
       ),
     );
   }
-
 }
