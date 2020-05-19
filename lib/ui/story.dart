@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icomoon_icons/flutter_icomoon_icons.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:icon_shadow/icon_shadow.dart';
+import 'package:jathakakatha/component/CustomSliderThumbCircle.dart';
 import 'package:jathakakatha/data/sinhala.dart';
+import 'package:jathakakatha/model/AppPreference.dart';
 import 'package:jathakakatha/model/Tale.dart';
 import 'package:share/share.dart';
 
@@ -25,10 +27,24 @@ class _State extends State<Story> {
   static int currentUtterIndex = 0;
   static bool isPaused = false;
 
+  double _fontSizeStory = 20;
+  double _ttsSpeed = 1;
+  AppPreference appPreference;
+  static bool _isBottomSheetVisible = false;
+
   @override
   void initState() {
     super.initState();
     initializeTTS();
+    getSharedPreferences();
+  }
+
+  Future<Null> getSharedPreferences() async {
+    appPreference = await AppPreference.getInstance();
+    setState(() {
+      _fontSizeStory = appPreference.storyFontSize;
+      _ttsSpeed = appPreference.ttsSpeed;
+    });
   }
 
   @override
@@ -83,6 +99,20 @@ class _State extends State<Story> {
                         ),
                       ),
                       new Spacer(),
+                      new Material(
+                        color: constColorTransparent,
+                        child: IconButton(
+                          icon: IconShadowWidget(
+                              Icon(IcoMoonIcons.cog, color: constColorIcon),
+                              showShadow: true,
+                              shadowColor: constColorIconShadow),
+                          color: constColorIcon,
+                          splashColor: constColorIconSplash,
+                          onPressed: () => setState(() {
+                            _isBottomSheetVisible = !_isBottomSheetVisible;
+                          }),
+                        ),
+                      ),
                       isSiLkPossible && isSpeaking
                           ? new Material(
                               color: constColorTransparent,
@@ -172,13 +202,19 @@ class _State extends State<Story> {
                       constPaddingSpace, constPaddingSpace, constPaddingSpace),
                   child: SingleChildScrollView(
                       child: Text("${widget.tale.story}\n",
-                          style: TextStyle(fontSize: constFontSizeStory),
+                          style: TextStyle(fontSize: _fontSizeStory),
                           textAlign: TextAlign.justify)),
                 ),
                 fit: FlexFit.tight,
                 flex: 1)
           ],
         ),
+        bottomSheet: _isBottomSheetVisible
+            ? BottomSheet(
+                onClosing: () {},
+                builder: (context) => _getBottomSheet(),
+              )
+            : null,
       ),
       onWillPop: () async {
         navigationPage(context, "Home");
@@ -317,8 +353,234 @@ class _State extends State<Story> {
 
   Future shareStory() async {
     final RenderBox box = context.findRenderObject();
-    Share.share("${widget.tale.title}\n\n${widget.tale.story}\n\n$constPansiyaPanas $constAppName\n\nhttps://play.google.com/store/apps/details?id=com.sahassoft.jathakakatha",
+    Share.share(
+        "${widget.tale.title}\n\n${widget.tale.story}\n\n$constPansiyaPanas $constAppName\n\nhttps://play.google.com/store/apps/details?id=com.sahassoft.jathakakatha",
         subject: "${widget.tale.title}",
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
+
+  void _displayBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          children: <Widget>[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  width: 100,
+                  height: 35,
+                  child: Text(
+                    "අකුරු තරම",
+                    style: TextStyle(
+                      fontSize: constFontSizeBody,
+                    ),
+                  ),
+                ),
+                SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      activeTrackColor: constColorPrimary,
+                      inactiveTrackColor: constColorDefaultDisabled,
+                      trackShape: RectangularSliderTrackShape(),
+                      trackHeight: 2.0,
+                      thumbColor: constColorDefaultText,
+                      thumbShape: CustomSliderThumbCircle(thumbRadius: 16.0),
+                      overlayColor: constColorPrimary.withAlpha(150),
+                      overlayShape:
+                          RoundSliderOverlayShape(overlayRadius: 24.0),
+                    ),
+                    child: Slider.adaptive(
+                      value: _fontSizeStory,
+                      min: constFontSizeStoryMin,
+                      max: constFontSizeStoryMax,
+                      divisions: 4,
+                      onChanged: (value) {
+                        setState(() {
+                          _fontSizeStory = value;
+                        });
+                      },
+                    ))
+              ],
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                    child: Expanded(
+                  child: Text(
+                    "ජාතක අටුවාව සිංහලයට නගමින් ලියැවුණු මහා ධර්ම ශාස්ත්‍රීය, සාහිත්‍ය ග්‍රන්ථය නම් ‘පන්සිය පනස් ජාතක පොත’ යි. බුදුරජාණන් වහන්සේ විසින් දේශනා කරන ලද්දා වූ පූර්ව බෝසත් උත්පත්ති කථා වන බැවින් උත්පත්ති යන අර්ථයෙන් මේ කථා ‘ජාතක’ නම් වේ. මේ, සිංහල පන්සිය පනස් ජාතක පොත ලියැවී ඇත්තේ කුරුණෑගල සමයේ ය.",
+                    textAlign: TextAlign.justify,
+                    style: TextStyle(fontSize: _fontSizeStory),
+                  ),
+                ))
+              ],
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  width: 100,
+                  height: 30,
+                  child: Text("කථන වේගය ",
+                      style: TextStyle(fontSize: constFontSizeBody)),
+                ),
+                Text("")
+              ],
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  void _resetPreferences() {
+    setState(() {
+      _fontSizeStory = appPreference.storyFontSize;
+      _ttsSpeed = appPreference.ttsSpeed;
+    });
+  }
+  
+  void _cancelPreferences() {
+    _resetPreferences();
+    setState(() {
+      _isBottomSheetVisible = false;
+    });
+  }
+
+  void _flushPreferences() {
+    appPreference.storyFontSize = _fontSizeStory;
+    appPreference.ttsSpeed = _ttsSpeed;
+    setState(() {
+      _isBottomSheetVisible = false;
+    });
+    appPreference.flushAppPreferences();
+  }
+
+  Widget _getBottomSheet() {
+    return Container(
+      height: 180,
+      decoration: BoxDecoration(
+          borderRadius:
+              BorderRadius.vertical(top: Radius.circular(constBorderRadius)),
+          color: constColorPrimary.withAlpha(140)),
+      child: Padding(
+        padding: EdgeInsets.all(constPaddingSpace),
+        child: ListView(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      width: 100,
+                      height: 35,
+                      child: Text(
+                        "අකුරු තරම",
+                        style: TextStyle(
+                          fontSize: constFontSizeBody,
+                        ),
+                      ),
+                    ),
+                    SliderTheme(
+                        data: SliderTheme.of(context).copyWith(
+                          activeTrackColor: constColorDefaultText,
+                          inactiveTrackColor: constColorDefaultDisabled,
+                          trackShape: RectangularSliderTrackShape(),
+                          trackHeight: 2.0,
+                          thumbColor: constColorPrimary,
+                          thumbShape:
+                              CustomSliderThumbCircle(thumbRadius: 16.0),
+                          overlayColor: constColorPrimary.withAlpha(150),
+                          overlayShape:
+                              RoundSliderOverlayShape(overlayRadius: 24.0),
+                        ),
+                        child: Slider.adaptive(
+                          value: _fontSizeStory,
+                          min: constFontSizeStoryMin,
+                          max: constFontSizeStoryMax,
+                          divisions: 4,
+                          onChanged: (value) {
+                            setState(() {
+                              _fontSizeStory = value;
+                            });
+                          },
+                        ))
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      width: 100,
+                      height: 35,
+                      child: Text(
+                        "කථන වේගය",
+                        style: TextStyle(
+                          fontSize: constFontSizeBody,
+                        ),
+                      ),
+                    ),
+                    SliderTheme(
+                        data: SliderTheme.of(context).copyWith(
+                          activeTrackColor: constColorDefaultText,
+                          inactiveTrackColor: constColorDefaultDisabled,
+                          trackShape: RectangularSliderTrackShape(),
+                          trackHeight: 2.0,
+                          thumbColor: constColorPrimary,
+                          thumbShape:
+                              CustomSliderThumbCircle(thumbRadius: 16.0),
+                          overlayColor: constColorPrimary.withAlpha(150),
+                          overlayShape:
+                              RoundSliderOverlayShape(overlayRadius: 24.0),
+                        ),
+                        child: Slider.adaptive(
+                          value: _fontSizeStory,
+                          min: constFontSizeStoryMin,
+                          max: constFontSizeStoryMax,
+                          divisions: 4,
+                          onChanged: (value) {
+                            setState(() {
+                              _fontSizeStory = value;
+                            });
+                          },
+                        ))
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    ButtonBar(children: <Widget>[
+                      FlatButton(
+                        textColor: Colors.blue,
+                        child: Text("යළි පිහිටුවන්න"),
+                        onPressed: () => this._resetPreferences(),
+                      ),
+                      OutlineButton(
+                        textColor: Colors.orange,
+                        child: Text("අවලංගු කරන්න"),
+                        onPressed: () => this._cancelPreferences(),
+                      ),
+                      RaisedButton(
+                        color: Colors.green,
+                        child: Text("තහවුරු කරන්න"),
+                        onPressed: () => this._flushPreferences(),
+                      ),
+                    ], alignment: MainAxisAlignment.spaceBetween)
+                  ],
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
 }
