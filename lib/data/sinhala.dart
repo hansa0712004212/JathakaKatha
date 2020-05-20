@@ -117,6 +117,7 @@ final Color constColorDefaultFill = Colors.white;
 final Color constColorDefaultDisabled = Colors.grey;
 final Color constColorIcon = Colors.white;
 final Color constColorIconShadow = Colors.black;
+final Color constColorTextShadow = Colors.black;
 final Color constColorIconSplash = Colors.orange;
 final Color constColorTransparent = Colors.transparent;
 
@@ -150,3 +151,33 @@ Map<String, double> fontSizeMap = <String, double>{
   "වේගයෙන්": 1.2,
   "ඉතා වේගයෙන්": 1.4
 };
+
+final double constShadowTextBlurRadius = 2;
+
+// Shadows
+final Shadow constShadowTextUpRight = Shadow(
+  offset: Offset(1.0, 1.5),
+  blurRadius: constShadowTextBlurRadius,
+  color: constColorTextShadow,
+);
+final Shadow constShadowTextDownRight = Shadow(
+  offset: Offset(1.0, -1.5),
+  blurRadius: constShadowTextBlurRadius,
+  color: constColorTextShadow,
+);
+final Shadow constShadowTextDownLeft = Shadow(
+  offset: Offset(-1.0, -1.5),
+  blurRadius: constShadowTextBlurRadius,
+  color: constColorTextShadow,
+);
+final Shadow constShadowTextUpLeft = Shadow(
+  offset: Offset(-1.0, 1.5),
+  blurRadius: constShadowTextBlurRadius,
+  color: constColorTextShadow,
+);
+final List<Shadow> constDefaultTextShadow = <Shadow>[
+  constShadowTextDownLeft,
+  constShadowTextDownRight,
+  constShadowTextUpRight,
+  constShadowTextUpLeft
+];

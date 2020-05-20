@@ -215,13 +215,7 @@ class _State extends State<Story> {
                                   color: constColorDefaultText,
                                   fontSize: constFontSizeTileIndex,
                                   fontWeight: FontWeight.bold,
-                                  shadows: <Shadow>[
-                                    Shadow(
-                                      offset: Offset(1.0, 2.5),
-                                      blurRadius: 1.5,
-                                      color: constColorIconShadow,
-                                    )
-                                  ]),
+                                  shadows: constDefaultTextShadow),
                             ),
                           ),
                           new Material(

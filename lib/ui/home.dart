@@ -150,13 +150,7 @@ class _HomeState extends State<Home> {
                                       color: constColorDefaultText,
                                       fontSize: constFontSizeTileIndex,
                                       fontWeight: FontWeight.bold,
-                                      shadows: <Shadow>[
-                                        Shadow(
-                                          offset: Offset(1.0, 2.5),
-                                          blurRadius: 1.5,
-                                          color: constColorIconShadow,
-                                        )
-                                      ]),
+                                      shadows: constDefaultTextShadow),
                                 ),
                               ),
                               footer: Padding(
@@ -168,13 +162,7 @@ class _HomeState extends State<Home> {
                                       color: constColorDefaultText,
                                       fontSize: constFontSizeTileTitle,
                                       fontWeight: FontWeight.bold,
-                                      shadows: <Shadow>[
-                                        Shadow(
-                                          offset: Offset(1.0, 2.5),
-                                          blurRadius: 1.5,
-                                          color: constColorIconShadow,
-                                        )
-                                      ]),
+                                      shadows: constDefaultTextShadow),
                                 ),
                               ),
                               child: ClipRRect(
