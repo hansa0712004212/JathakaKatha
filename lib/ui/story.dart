@@ -29,6 +29,7 @@ class _State extends State<Story> {
 
   double _fontSizeStory = 20;
   double _ttsSpeed = 1;
+  String _ttsSpeedKey;
   AppPreference appPreference;
   static bool _isBottomSheetVisible = false;
 
@@ -44,20 +45,40 @@ class _State extends State<Story> {
     setState(() {
       _fontSizeStory = appPreference.storyFontSize;
       _ttsSpeed = appPreference.ttsSpeed;
+      _ttsSpeedKey = _getTtsSpeedMap(appPreference.ttsSpeed);
     });
     _updateRecentList();
+  }
+
+  String _getTtsSpeedMap(double speed) {
+    int checkable = (speed * 10).toInt();
+    switch (checkable) {
+      case 6:
+        return fontSizeMap.keys.toList()[0];
+      case 8:
+        return fontSizeMap.keys.toList()[1];
+      case 10:
+        return fontSizeMap.keys.toList()[2];
+      case 12:
+        return fontSizeMap.keys.toList()[3];
+      case 14:
+        return fontSizeMap.keys.toList()[4];
+      default:
+        return fontSizeMap.keys.toList()[2];
+    }
   }
 
   @override
   void dispose() {
     if (flutterTts != null) {
       flutterTts.stop();
-      flutterTts = null;
-      isSpeaking = false;
-      currentTtsPart = 0;
-      currentUtterIndex = 0;
-      isPaused = false;
     }
+    flutterTts = null;
+    isSpeaking = false;
+    currentTtsPart = 0;
+    currentUtterIndex = 0;
+    isPaused = false;
+    _isBottomSheetVisible = false;
     super.dispose();
   }
 
@@ -80,7 +101,7 @@ class _State extends State<Story> {
                     )),
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 5, vertical: 26),
+                      const EdgeInsets.symmetric(horizontal: 0, vertical: 26),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -167,12 +188,25 @@ class _State extends State<Story> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(constPaddingSpace, 180, 0, 0),
+                  padding: EdgeInsets.fromLTRB(0, 170, 0, 0),
                   child: Column(
                     children: <Widget>[
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
+                          new Material(
+                            color: constColorTransparent,
+                            child: IconButton(
+                              icon: IconShadowWidget(
+                                  Icon(IcoMoonIcons.previous2,
+                                      color: constColorIcon),
+                                  showShadow: true,
+                                  shadowColor: constColorIconShadow),
+                              color: constColorIcon,
+                              splashColor: constColorIconSplash,
+                              onPressed: () {},
+                            ),
+                          ),
                           new Flexible(
                             child: Text(
                               "${widget.tale.id}. ${widget.tale.title}",
@@ -188,6 +222,19 @@ class _State extends State<Story> {
                                       color: constColorIconShadow,
                                     )
                                   ]),
+                            ),
+                          ),
+                          new Material(
+                            color: constColorTransparent,
+                            child: IconButton(
+                              icon: IconShadowWidget(
+                                  Icon(IcoMoonIcons.next2,
+                                      color: constColorIcon),
+                                  showShadow: true,
+                                  shadowColor: constColorIconShadow),
+                              color: constColorIcon,
+                              splashColor: constColorIconSplash,
+                              onPressed: () {},
                             ),
                           ),
                         ],
@@ -240,7 +287,7 @@ class _State extends State<Story> {
       });
 
       await flutterTts.setLanguage(constTtsLanguage);
-      await flutterTts.setSpeechRate(0.8);
+      await flutterTts.setSpeechRate(_ttsSpeed);
       await flutterTts.setPitch(1.2);
       flutterTts.setStartHandler(() {
         setState(() {
@@ -360,84 +407,6 @@ class _State extends State<Story> {
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
-  void _displayBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Column(
-          children: <Widget>[
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  width: 100,
-                  height: 35,
-                  child: Text(
-                    "අකුරු තරම",
-                    style: TextStyle(
-                      fontSize: constFontSizeBody,
-                    ),
-                  ),
-                ),
-                SliderTheme(
-                    data: SliderTheme.of(context).copyWith(
-                      activeTrackColor: constColorPrimary,
-                      inactiveTrackColor: constColorDefaultDisabled,
-                      trackShape: RectangularSliderTrackShape(),
-                      trackHeight: 2.0,
-                      thumbColor: constColorDefaultText,
-                      thumbShape: CustomSliderThumbCircle(thumbRadius: 16.0),
-                      overlayColor: constColorPrimary.withAlpha(150),
-                      overlayShape:
-                          RoundSliderOverlayShape(overlayRadius: 24.0),
-                    ),
-                    child: Slider.adaptive(
-                      value: _fontSizeStory,
-                      min: constFontSizeStoryMin,
-                      max: constFontSizeStoryMax,
-                      divisions: 4,
-                      onChanged: (value) {
-                        setState(() {
-                          _fontSizeStory = value;
-                        });
-                      },
-                    ))
-              ],
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                    child: Expanded(
-                  child: Text(
-                    "ජාතක අටුවාව සිංහලයට නගමින් ලියැවුණු මහා ධර්ම ශාස්ත්‍රීය, සාහිත්‍ය ග්‍රන්ථය නම් ‘පන්සිය පනස් ජාතක පොත’ යි. බුදුරජාණන් වහන්සේ විසින් දේශනා කරන ලද්දා වූ පූර්ව බෝසත් උත්පත්ති කථා වන බැවින් උත්පත්ති යන අර්ථයෙන් මේ කථා ‘ජාතක’ නම් වේ. මේ, සිංහල පන්සිය පනස් ජාතක පොත ලියැවී ඇත්තේ කුරුණෑගල සමයේ ය.",
-                    textAlign: TextAlign.justify,
-                    style: TextStyle(fontSize: _fontSizeStory),
-                  ),
-                ))
-              ],
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  width: 100,
-                  height: 30,
-                  child: Text("කථන වේගය ",
-                      style: TextStyle(fontSize: constFontSizeBody)),
-                ),
-                Text("")
-              ],
-            )
-          ],
-        );
-      },
-    );
-  }
-
   void _resetPreferences() {
     setState(() {
       _fontSizeStory = appPreference.storyFontSize;
@@ -458,6 +427,7 @@ class _State extends State<Story> {
     setState(() {
       _isBottomSheetVisible = false;
     });
+    flutterTts.setSpeechRate(_ttsSpeed);
     appPreference.flushAppPreferences();
   }
 
@@ -468,11 +438,11 @@ class _State extends State<Story> {
 
   Widget _getBottomSheet() {
     return Container(
-      height: 180,
+      height: isSpeaking ? 132 : 180,
       decoration: BoxDecoration(
           borderRadius:
               BorderRadius.vertical(top: Radius.circular(constBorderRadius)),
-          color: constColorPrimary.withAlpha(140)),
+          color: Colors.grey.withAlpha(40)),
       child: Padding(
         padding: EdgeInsets.all(constPaddingSpace),
         child: ListView(
@@ -495,11 +465,11 @@ class _State extends State<Story> {
                     ),
                     SliderTheme(
                         data: SliderTheme.of(context).copyWith(
-                          activeTrackColor: constColorDefaultText,
+                          activeTrackColor: constColorPrimary,
                           inactiveTrackColor: constColorDefaultDisabled,
                           trackShape: RectangularSliderTrackShape(),
-                          trackHeight: 2.0,
-                          thumbColor: constColorPrimary,
+                          trackHeight: 1.5,
+                          thumbColor: constColorDefaultText,
                           thumbShape:
                               CustomSliderThumbCircle(thumbRadius: 16.0),
                           overlayColor: constColorPrimary.withAlpha(150),
@@ -519,48 +489,51 @@ class _State extends State<Story> {
                         ))
                   ],
                 ),
+                !isSpeaking
+                    ? Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            width: 130,
+                            height: 35,
+                            child: Text(
+                              "කථන වේගය",
+                              style: TextStyle(
+                                fontSize: constFontSizeBody,
+                              ),
+                            ),
+                          ),
+                          DropdownButton<String>(
+                            value: _ttsSpeedKey,
+                            icon: Icon(Icons.arrow_drop_down),
+                            iconSize: 24,
+                            elevation: 16,
+                            style: TextStyle(color: constColorPrimary),
+                            underline: Container(
+                              height: 2,
+                              color: constColorPrimary,
+                            ),
+                            onChanged: (String newValue) {
+                              setState(() {
+                                _ttsSpeedKey = newValue;
+                                _ttsSpeed = fontSizeMap[newValue];
+                              });
+                            },
+                            items: fontSizeMap.keys
+                                .toList()
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          )
+                        ],
+                      )
+                    : Container(),
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      width: 100,
-                      height: 35,
-                      child: Text(
-                        "කථන වේගය",
-                        style: TextStyle(
-                          fontSize: constFontSizeBody,
-                        ),
-                      ),
-                    ),
-                    SliderTheme(
-                        data: SliderTheme.of(context).copyWith(
-                          activeTrackColor: constColorDefaultText,
-                          inactiveTrackColor: constColorDefaultDisabled,
-                          trackShape: RectangularSliderTrackShape(),
-                          trackHeight: 2.0,
-                          thumbColor: constColorPrimary,
-                          thumbShape:
-                              CustomSliderThumbCircle(thumbRadius: 16.0),
-                          overlayColor: constColorPrimary.withAlpha(150),
-                          overlayShape:
-                              RoundSliderOverlayShape(overlayRadius: 24.0),
-                        ),
-                        child: Slider.adaptive(
-                          value: _fontSizeStory,
-                          min: constFontSizeStoryMin,
-                          max: constFontSizeStoryMax,
-                          divisions: 4,
-                          onChanged: (value) {
-                            setState(() {
-                              _fontSizeStory = value;
-                            });
-                          },
-                        ))
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     ButtonBar(children: <Widget>[
                       FlatButton(
@@ -568,8 +541,8 @@ class _State extends State<Story> {
                         child: Text("යළි පිහිටුවන්න"),
                         onPressed: () => this._resetPreferences(),
                       ),
-                      OutlineButton(
-                        textColor: Colors.orange,
+                      RaisedButton(
+                        color: Colors.orangeAccent,
                         child: Text("අවලංගු කරන්න"),
                         onPressed: () => this._cancelPreferences(),
                       ),

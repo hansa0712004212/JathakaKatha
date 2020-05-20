@@ -141,3 +141,12 @@ final double constBorderWidth = 0.8;
 final double constTextContentPadding = 10;
 final double constIconSize = 20;
 final double constPaddingSpace = 10;
+
+// Array
+Map<String, double> fontSizeMap = <String, double>{
+  "ඉතා සෙමෙන්": 0.6,
+  "සෙමෙන්": 0.8,
+  "සාමාන්‍ය": 1,
+  "වේගයෙන්": 1.2,
+  "ඉතා වේගයෙන්": 1.4
+};
