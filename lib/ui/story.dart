@@ -197,15 +197,14 @@ class _State extends State<Story> {
                           new Material(
                             color: constColorTransparent,
                             child: IconButton(
-                              icon: IconShadowWidget(
-                                  Icon(IcoMoonIcons.previous2,
-                                      color: constColorIcon),
-                                  showShadow: true,
-                                  shadowColor: constColorIconShadow),
-                              color: constColorIcon,
-                              splashColor: constColorIconSplash,
-                              onPressed: () {},
-                            ),
+                                icon: IconShadowWidget(
+                                    Icon(IcoMoonIcons.previous2,
+                                        color: constColorIcon),
+                                    showShadow: true,
+                                    shadowColor: constColorIconShadow),
+                                color: constColorIcon,
+                                splashColor: constColorIconSplash,
+                                onPressed: _previousStory),
                           ),
                           new Flexible(
                             child: Text(
@@ -221,15 +220,14 @@ class _State extends State<Story> {
                           new Material(
                             color: constColorTransparent,
                             child: IconButton(
-                              icon: IconShadowWidget(
-                                  Icon(IcoMoonIcons.next2,
-                                      color: constColorIcon),
-                                  showShadow: true,
-                                  shadowColor: constColorIconShadow),
-                              color: constColorIcon,
-                              splashColor: constColorIconSplash,
-                              onPressed: () {},
-                            ),
+                                icon: IconShadowWidget(
+                                    Icon(IcoMoonIcons.next2,
+                                        color: constColorIcon),
+                                    showShadow: true,
+                                    shadowColor: constColorIconShadow),
+                                color: constColorIcon,
+                                splashColor: constColorIconSplash,
+                                onPressed: _nextStory),
                           ),
                         ],
                       )
@@ -554,5 +552,19 @@ class _State extends State<Story> {
         ),
       ),
     );
+  }
+
+  void _nextStory() {
+    dispose();
+    Tale nextStory = tales.elementAt(widget.tale.id);
+    Navigator.push(
+        context, MaterialPageRoute(builder: (_) => Story(tale: nextStory)));
+  }
+
+  void _previousStory() {
+    dispose();
+    Tale previousStory = tales.elementAt(widget.tale.id - 2);
+    Navigator.push(
+        context, MaterialPageRoute(builder: (_) => Story(tale: previousStory)));
   }
 }
