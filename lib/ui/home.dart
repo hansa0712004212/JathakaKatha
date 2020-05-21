@@ -28,6 +28,8 @@ class _HomeState extends State<Home> {
     _searchKey = "";
     _isRecentEnabled = false;
     _searchTextController = TextEditingController();
+    _gridViewController =
+        ScrollController(initialScrollOffset: 0.0, keepScrollOffset: false);
     _rangeToggle = List.generate(6, (index) => index == 0 ? true : false);
   }
 
@@ -77,6 +79,7 @@ class _HomeState extends State<Home> {
                 onPressed: () {
                   setState(() {
                     _isRecentEnabled = !_isRecentEnabled;
+                    _scrollToTop();
                   });
                 })
           ],
@@ -218,6 +221,7 @@ class _HomeState extends State<Home> {
                               }
                             }
                           });
+                          _scrollToTop();
                         },
                         fillColor: constColorPrimary,
                         borderRadius: BorderRadius.circular(constBorderRadius),
@@ -285,6 +289,14 @@ class _HomeState extends State<Home> {
     setState(() {
       _searchKey = "";
     });
+  }
+
+  void _scrollToTop() {
+    _gridViewController.animateTo(
+      _gridViewController.position.minScrollExtent,
+      duration: const Duration(milliseconds: 1000),
+      curve: Curves.ease,
+    );
   }
 
   List<Widget> _getToggleButtons() {
