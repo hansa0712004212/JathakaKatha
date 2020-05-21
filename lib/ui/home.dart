@@ -238,24 +238,33 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
-      onWillPop: () => showDialog<bool>(
-        context: context,
-        builder: (c) => AlertDialog(
-          title: Text(constExit),
-          content: Text(constExitConfirmMessage),
-          actions: [
-            FlatButton(
-              child: Text(constYes),
-              onPressed: () =>
-                  SystemChannels.platform.invokeMethod('SystemNavigator.pop'),
-            ),
-            FlatButton(
-              child: Text(constNo),
-              onPressed: () => Navigator.pop(c, false),
-            ),
-          ],
-        ),
-      ),
+      onWillPop: () {
+        return _isRecentEnabled
+            ? {
+                setState(() {
+                  _isRecentEnabled = false;
+                }),
+                Container()
+              }
+            : showDialog<bool>(
+                context: context,
+                builder: (c) => AlertDialog(
+                  title: Text(constExit),
+                  content: Text(constExitConfirmMessage),
+                  actions: [
+                    FlatButton(
+                      child: Text(constYes),
+                      onPressed: () => SystemChannels.platform
+                          .invokeMethod('SystemNavigator.pop'),
+                    ),
+                    FlatButton(
+                      child: Text(constNo),
+                      onPressed: () => Navigator.pop(c, false),
+                    ),
+                  ],
+                ),
+              );
+      },
     );
   }
 
