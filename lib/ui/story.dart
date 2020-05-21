@@ -194,18 +194,20 @@ class _State extends State<Story> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          new Material(
-                            color: constColorTransparent,
-                            child: IconButton(
-                                icon: IconShadowWidget(
-                                    Icon(IcoMoonIcons.previous2,
-                                        color: constColorIcon),
-                                    showShadow: true,
-                                    shadowColor: constColorIconShadow),
-                                color: constColorIcon,
-                                splashColor: constColorIconSplash,
-                                onPressed: _previousStory),
-                          ),
+                          (widget.tale.id != 1)
+                              ? new Material(
+                                  color: constColorTransparent,
+                                  child: IconButton(
+                                      icon: IconShadowWidget(
+                                          Icon(IcoMoonIcons.previous2,
+                                              color: constColorIcon),
+                                          showShadow: true,
+                                          shadowColor: constColorIconShadow),
+                                      color: constColorIcon,
+                                      splashColor: constColorIconSplash,
+                                      onPressed: _previousStory),
+                                )
+                              : Container(height: 0),
                           new Flexible(
                             child: Text(
                               "${widget.tale.id}. ${widget.tale.title}",
@@ -217,18 +219,20 @@ class _State extends State<Story> {
                                   shadows: constDefaultTextShadow),
                             ),
                           ),
-                          new Material(
-                            color: constColorTransparent,
-                            child: IconButton(
-                                icon: IconShadowWidget(
-                                    Icon(IcoMoonIcons.next2,
-                                        color: constColorIcon),
-                                    showShadow: true,
-                                    shadowColor: constColorIconShadow),
-                                color: constColorIcon,
-                                splashColor: constColorIconSplash,
-                                onPressed: _nextStory),
-                          ),
+                          (widget.tale.id != tales.length)
+                              ? new Material(
+                                  color: constColorTransparent,
+                                  child: IconButton(
+                                      icon: IconShadowWidget(
+                                          Icon(IcoMoonIcons.next2,
+                                              color: constColorIcon),
+                                          showShadow: true,
+                                          shadowColor: constColorIconShadow),
+                                      color: constColorIcon,
+                                      splashColor: constColorIconSplash,
+                                      onPressed: _nextStory),
+                                )
+                              : Container(height: 0),
                         ],
                       )
                     ],
