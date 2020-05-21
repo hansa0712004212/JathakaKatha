@@ -14,18 +14,21 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   TextEditingController _searchTextController;
+  ScrollController _gridViewController;
   String _searchKey = "";
   List<String> _recentIds;
   bool _isRecentEnabled = false;
   AppPreference appPreference;
+  List<bool> _rangeToggle;
 
   @override
   void initState() {
     super.initState();
+    getSharedPreferences();
     _searchKey = "";
     _isRecentEnabled = false;
     _searchTextController = TextEditingController();
-    getSharedPreferences();
+    _rangeToggle = List.generate(6, (index) => index == 0 ? true : false);
   }
 
   Future<Null> getSharedPreferences() async {
@@ -125,7 +128,7 @@ class _HomeState extends State<Home> {
                                   size: constIconSize,
                                   color: constColorPrimary),
                               onPressed: clearSearch)
-                          : null),
+                          : Container(height: 0)),
                   onChanged: (String searchKey) async {
                     setState(() {
                       _searchKey = searchKey;
@@ -145,6 +148,7 @@ class _HomeState extends State<Home> {
                           ? 2
                           : 4,
                       childAspectRatio: 2,
+                      controller: _gridViewController,
                       padding: EdgeInsets.all(constPaddingSpace),
                       mainAxisSpacing: constPaddingSpace,
                       crossAxisSpacing: constPaddingSpace,
@@ -195,7 +199,37 @@ class _HomeState extends State<Home> {
                       }).toList()),
                 ),
               ),
-              //_buildTales()
+              !_isRecentEnabled
+                  ? Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: constPaddingSpace / 2),
+                      child: ToggleButtons(
+                        children: _getToggleButtons(),
+                        isSelected: _rangeToggle,
+                        onPressed: (int index) {
+                          setState(() {
+                            for (int buttonIndex = 0;
+                                buttonIndex < _rangeToggle.length;
+                                buttonIndex++) {
+                              if (buttonIndex == index) {
+                                _rangeToggle[buttonIndex] = true;
+                              } else {
+                                _rangeToggle[buttonIndex] = false;
+                              }
+                            }
+                          });
+                        },
+                        fillColor: constColorPrimary,
+                        borderRadius: BorderRadius.circular(constBorderRadius),
+                        borderWidth: 0.5,
+                        borderColor: constColorPrimary,
+                        selectedBorderColor: constColorPrimary,
+                        splashColor: constColorPrimary.withAlpha(50),
+                        highlightColor: constColorPrimary.withAlpha(100),
+                        hoverColor: constColorPrimary.withAlpha(50),
+                      ),
+                    )
+                  : Container(height: 0)
             ],
           ),
         ),
@@ -238,7 +272,11 @@ class _HomeState extends State<Home> {
       });
       return recentList.reversed.toList();
     } else {
-      return tales;
+      int selectedRange = _rangeToggle.indexOf(true);
+      return tales.sublist(
+          (selectedRange * 10),
+          ((selectedRange + 1) *
+              10)); //TODO change value 10 to 100 when stories are filled
     }
   }
 
@@ -247,5 +285,52 @@ class _HomeState extends State<Home> {
     setState(() {
       _searchKey = "";
     });
+  }
+
+  List<Widget> _getToggleButtons() {
+    List<String> toggleButtonText = [
+      "  1-\n100",
+      "101-\n200",
+      "201-\n300",
+      "301-\n400",
+      "401-\n500",
+      "501-\n550"
+    ];
+    List<Container> toggleButtons = [];
+    toggleButtonText.asMap().forEach((key, value) {
+      toggleButtons.add(Container(
+          width: (MediaQuery.of(context).size.width - 20) /
+              _rangeToggle.length, //_toggleButtonContainerWidth,
+          child: new Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new Text(
+                value,
+                style: TextStyle(
+                    color: _rangeToggle[key]
+                        ? constColorDefaultText
+                        : constColorPrimary,
+                    fontWeight:
+                        _rangeToggle[key] ? FontWeight.bold : FontWeight.normal,
+                    shadows: _rangeToggle[key]
+                        ? [
+                            Shadow(
+                              offset: Offset(0.0, 0.0),
+                              blurRadius: 2.5,
+                              color: constColorDefaultText,
+                            ),
+                          ]
+                        : [
+                            Shadow(
+                              offset: Offset(0.0, 0.0),
+                              blurRadius: 2.5,
+                              color: constColorPrimary,
+                            ),
+                          ]),
+              )
+            ],
+          )));
+    });
+    return toggleButtons;
   }
 }
