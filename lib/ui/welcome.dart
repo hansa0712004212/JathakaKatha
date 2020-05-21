@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jathakakatha/data/sinhala.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class Welcome extends StatefulWidget {
   @override
@@ -10,10 +11,13 @@ class Welcome extends StatefulWidget {
 }
 
 class _WelcomeState extends State<Welcome> {
+  final int _duration = 2;
+
   @override
   void initState() {
     super.initState();
-    startTime();
+    _startTime();
+    _portraitModeOnly();
   }
 
   @override
@@ -77,7 +81,12 @@ class _WelcomeState extends State<Welcome> {
                             color: constColorSplashTextTitle,
                           )
                         ]),
-                  )
+                  ),
+                  Row(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      verticalDirection: VerticalDirection.up,
+                      children: _initProgressBars())
                 ])));
   }
 
@@ -99,13 +108,38 @@ class _WelcomeState extends State<Welcome> {
     ]);
   }
 
-  startTime() async {
-    var duration = new Duration(seconds: 3);
+  _startTime() async {
+    var duration = new Duration(seconds: _duration);
     return new Timer(duration, navigationPage);
   }
 
   void navigationPage() {
-    _enableRotation();
     Navigator.pushReplacementNamed(context, "/Home");
+    _enableRotation();
+  }
+
+  List<Flexible> _initProgressBars() {
+    List<Color> progressBarColors = [
+      Color.fromARGB(255, 0, 0, 255),
+      Colors.yellow,
+      Colors.red,
+      Colors.white,
+      Colors.orange
+    ];
+
+    List<Flexible> flexibleProgressBars = [];
+    progressBarColors.asMap().forEach((key, value) {
+      flexibleProgressBars.add(Flexible(
+        child: new LinearPercentIndicator(
+            percent: 1,
+            animation: true,
+            animationDuration: _duration * 800,
+            progressColor: progressBarColors.elementAt(key),
+            padding: EdgeInsets.fromLTRB(
+                0, 0, key == progressBarColors.length - 1 ? 0 : 5, 0),
+            backgroundColor: progressBarColors.elementAt(key).withAlpha(100)),
+      ));
+    });
+    return flexibleProgressBars;
   }
 }
