@@ -95,7 +95,11 @@ class _HomeState extends State<Home> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.all(constPaddingSpace),
+                padding: EdgeInsets.fromLTRB(
+                    constPaddingSpace,
+                    constPaddingSpace / 2,
+                    constPaddingSpace,
+                    constPaddingSpace),
                 child: TextField(
                   controller: _searchTextController,
                   cursorColor: constColorPrimary,
@@ -152,7 +156,8 @@ class _HomeState extends State<Home> {
                           : 4,
                       childAspectRatio: 2,
                       controller: _gridViewController,
-                      padding: EdgeInsets.all(constPaddingSpace),
+                      padding: EdgeInsets.fromLTRB(constPaddingSpace, 0,
+                          constPaddingSpace, constPaddingSpace),
                       mainAxisSpacing: constPaddingSpace,
                       crossAxisSpacing: constPaddingSpace,
                       children: getTales().map((Tale tale) {
@@ -204,8 +209,8 @@ class _HomeState extends State<Home> {
               ),
               !_isRecentEnabled
                   ? Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: constPaddingSpace / 2),
+                      padding: EdgeInsets.fromLTRB(
+                          0, constPaddingSpace, 0, constPaddingSpace),
                       child: ToggleButtons(
                         children: _getToggleButtons(),
                         isSelected: _rangeToggle,
