@@ -46,6 +46,8 @@ class _HomeState extends State<Home> {
     return WillPopScope(
       child: Scaffold(
         appBar: AppBar(
+          elevation: 0,
+          bottomOpacity: 1.0,
           title: Text(
             "$constPansiyaPanas $constAppName",
             textDirection: TextDirection.ltr,
@@ -77,6 +79,12 @@ class _HomeState extends State<Home> {
           ],
         ),
         body: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [constColorPrimary, constColorDefaultText],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0.1, 1])),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
@@ -84,6 +92,7 @@ class _HomeState extends State<Home> {
                 padding: EdgeInsets.all(constPaddingSpace),
                 child: TextField(
                   controller: _searchTextController,
+                  cursorColor: constColorPrimary,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderRadius:
@@ -101,7 +110,7 @@ class _HomeState extends State<Home> {
                               BorderRadius.circular(constBorderRadius),
                           borderSide: BorderSide(
                               width: constBorderWidth,
-                              color: constColorDefaultDisabled)),
+                              color: constColorTransparent)),
                       focusedBorder: OutlineInputBorder(
                           borderRadius:
                               BorderRadius.circular(constBorderRadius),
@@ -110,16 +119,22 @@ class _HomeState extends State<Home> {
                               color: constColorPrimary)),
                       prefixIcon: Icon(IcoMoonIcons.search,
                           size: constIconSize, color: constColorPrimary),
-                      suffixIcon: IconButton(
-                          icon: Icon(IcoMoonIcons.cross,
-                              size: constIconSize, color: constColorPrimary),
-                          onPressed: clearSearch)),
+                      suffixIcon: _searchKey.length > 0
+                          ? IconButton(
+                              icon: Icon(IcoMoonIcons.cross,
+                                  size: constIconSize,
+                                  color: constColorPrimary),
+                              onPressed: clearSearch)
+                          : null),
                   onChanged: (String searchKey) async {
                     setState(() {
                       _searchKey = searchKey;
                       _isRecentEnabled = false;
                     });
                   },
+                  style: TextStyle(
+                      color: constColorPrimary,
+                      fontSize: constFontSizeTileTitle),
                 ),
               ),
               Container(

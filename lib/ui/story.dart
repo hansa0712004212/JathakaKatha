@@ -241,13 +241,27 @@ class _State extends State<Story> {
               ],
             ),
             Flexible(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(constPaddingSpace,
-                      constPaddingSpace, constPaddingSpace, constPaddingSpace),
-                  child: SingleChildScrollView(
-                      child: Text("${widget.tale.story}\n",
-                          style: TextStyle(fontSize: _fontSizeStory),
-                          textAlign: TextAlign.justify)),
+                child: Container(
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [
+                            constColorPrimary.withAlpha(200),
+                            constColorDefaultText
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: [0.0001, 0.03])),
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                        constPaddingSpace,
+                        constPaddingSpace,
+                        constPaddingSpace,
+                        constPaddingSpace),
+                    child: SingleChildScrollView(
+                        child: Text("${widget.tale.story}\n",
+                            style: TextStyle(fontSize: _fontSizeStory),
+                            textAlign: TextAlign.justify)),
+                  ),
                 ),
                 fit: FlexFit.tight,
                 flex: 1)
