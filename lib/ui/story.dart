@@ -242,6 +242,7 @@ class _State extends State<Story> {
             ),
             Flexible(
                 child: Container(
+                  width: double.infinity,
                   decoration: BoxDecoration(
                       gradient: LinearGradient(
                           colors: [
