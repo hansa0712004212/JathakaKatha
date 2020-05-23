@@ -1,5 +1,3 @@
-import 'dart:io' show Platform;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_icomoon_icons/flutter_icomoon_icons.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -23,9 +21,9 @@ class _State extends State<Story> {
   static FlutterTts flutterTts;
   static bool isSiLkPossible = false;
   static bool isSpeaking = false;
-  static int currentTtsPart = 0;
-  static int currentUtterIndex = 0;
   static bool isPaused = false;
+  static int _currentSentenceIndex = 0;
+  List<String> _splitStoryList = [];
 
   double _fontSizeStory = 20;
   double _ttsSpeed = 1;
@@ -75,16 +73,14 @@ class _State extends State<Story> {
     }
     flutterTts = null;
     isSpeaking = false;
-    currentTtsPart = 0;
-    currentUtterIndex = 0;
     isPaused = false;
     _isBottomSheetVisible = false;
+    _currentSentenceIndex = 0;
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    initializeTTS();
     return WillPopScope(
       child: Scaffold(
         body: Column(
@@ -286,127 +282,73 @@ class _State extends State<Story> {
     Navigator.of(defaultContext).pushReplacementNamed('/$screenName');
   }
 
+  Future _splitStory() async {
+    _splitStoryList = widget.tale.story.split(".");
+  }
+
   Future initializeTTS() async {
     if (flutterTts == null) {
       flutterTts = new FlutterTts();
       bool isLanguageAvailable =
           await flutterTts.isLanguageAvailable(constTtsLanguage);
-      setState(() {
-        isSiLkPossible = isLanguageAvailable;
-        currentUtterIndex = 0;
-        currentTtsPart = 0;
-      });
+      if (isLanguageAvailable) {
+        setState(() {
+          isSiLkPossible = isLanguageAvailable;
+          _currentSentenceIndex = 0;
+        });
+        await _splitStory();
+        await flutterTts.setLanguage(constTtsLanguage);
+        await flutterTts.setSpeechRate(_ttsSpeed);
+        await flutterTts.setPitch(1.2);
 
-      await flutterTts.setLanguage(constTtsLanguage);
-      await flutterTts.setSpeechRate(_ttsSpeed);
-      await flutterTts.setPitch(1.2);
-      flutterTts.setStartHandler(() {
-        setState(() {
-          isSpeaking = true;
-        });
-      });
-      flutterTts.setProgressHandler(
-          (String text, int startOffset, int endOffset, String word) {
-        setState(() {
-          currentUtterIndex =
-              ((currentTtsPart - 1) * constTtsMaxLength) + startOffset;
-        });
-      });
-      flutterTts.setCompletionHandler(() {
-        if (widget.tale.story.length <= constTtsMaxLength) {
+        flutterTts.setStartHandler(() {
           setState(() {
-            isSpeaking = false;
+            isSpeaking = true;
           });
-        } else {
-          int nextTargetIndex = 0;
-          int storyLength = widget.tale.story.length;
-          int noOfPartsPossible = (storyLength / constTtsMaxLength).ceil();
-          if (noOfPartsPossible == currentTtsPart + 1) {
-            nextTargetIndex = widget.tale.story.length;
-          } else if (noOfPartsPossible < currentTtsPart + 1) {
-            setState(() {
-              isSpeaking = false;
-            });
-            return;
+        });
+        flutterTts.setCompletionHandler(() async {
+          int _currentSentenceIndexTemp = ++_currentSentenceIndex;
+          setState(() {
+            _currentSentenceIndex = _currentSentenceIndexTemp;
+          });
+          if (_currentSentenceIndexTemp != _splitStoryList.length) {
+            await playTTS();
           } else {
-            nextTargetIndex =
-                (constTtsMaxLength * currentTtsPart) + constTtsMaxLength;
+            await stopTTS();
           }
-
-          flutterTts.speak(widget.tale.story.substring(
-              (constTtsMaxLength * currentTtsPart), nextTargetIndex));
-          setState(() {
-            currentTtsPart = currentTtsPart + 1;
-          });
-        }
-      });
-      flutterTts.setErrorHandler((msg) {
-        setState(() {
-          isSpeaking = false;
-          currentTtsPart = 0;
-          isPaused = false;
-          currentUtterIndex = 0;
         });
-      });
+        flutterTts.setErrorHandler((msg) async {
+          await stopTTS();
+        });
+      }
     }
   }
 
   Future playTTS() async {
-    if (flutterTts != null) {
-      if (isPaused) {
-        setState(() {
-          isPaused = false;
-          isSpeaking = true;
-        });
-        try {
-          if ((widget.tale.story.length / constTtsMaxLength).ceil() ==
-              (currentTtsPart / 1.0)) {
-            await flutterTts
-                .speak(widget.tale.story.substring(currentUtterIndex));
-          } else {
-            await flutterTts.speak(widget.tale.story.substring(
-                currentUtterIndex, (currentTtsPart) * constTtsMaxLength));
-          }
-        } catch (e) {
-          await stopTTS();
-        }
-      } else {
-        if (widget.tale.story.length <= constTtsMaxLength) {
-          await flutterTts.speak(widget.tale.story);
-        } else {
-          flutterTts.speak(widget.tale.story.substring(0, constTtsMaxLength));
-          setState(() {
-            currentTtsPart = 1;
-          });
-        }
-      }
-    }
+    await flutterTts.speak(_splitStoryList[_currentSentenceIndex]);
+    setState(() {
+      isSpeaking = true;
+      isPaused = false;
+    });
   }
 
   Future pauseTTS() async {
     if (isPaused) {
       await playTTS();
     } else {
+      await flutterTts.stop();
       setState(() {
         isPaused = true;
       });
-      if (Platform.isIOS) {
-        flutterTts.pause();
-      } else {
-        flutterTts.stop();
-      }
     }
   }
 
   Future stopTTS() async {
-    if (flutterTts != null) {
-      flutterTts.stop();
-    }
+    await flutterTts.stop();
     setState(() {
       isPaused = false;
       isSpeaking = false;
-      currentTtsPart = 0;
-      currentUtterIndex = 0;
+      _currentSentenceIndex = 0;
     });
   }
 
