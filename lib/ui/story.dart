@@ -6,6 +6,7 @@ import 'package:jathakakatha/component/CustomSliderThumbCircle.dart';
 import 'package:jathakakatha/data/sinhala.dart';
 import 'package:jathakakatha/model/AppPreference.dart';
 import 'package:jathakakatha/model/Tale.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:share/share.dart';
 
 class Story extends StatefulWidget {
@@ -23,6 +24,7 @@ class _State extends State<Story> {
   static bool isSpeaking = false;
   static bool isPaused = false;
   static int _currentSentenceIndex = 0;
+  double _currentTtsProgress = 0;
   List<String> _splitStoryList = [];
 
   double _fontSizeStory = 20;
@@ -76,6 +78,7 @@ class _State extends State<Story> {
     isPaused = false;
     _isBottomSheetVisible = false;
     _currentSentenceIndex = 0;
+    _currentTtsProgress = 0;
     super.dispose();
   }
 
@@ -249,19 +252,26 @@ class _State extends State<Story> {
                           end: Alignment.bottomCenter,
                           stops: [0.0001, 0.03])),
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(
-                        constPaddingSpace,
-                        constPaddingSpace,
-                        constPaddingSpace,
-                        constPaddingSpace),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: constPaddingSpace),
                     child: SingleChildScrollView(
-                        child: Text("${widget.tale.story}\n",
+                        child: Text("\n${widget.tale.story}\n",
                             style: TextStyle(fontSize: _fontSizeStory),
                             textAlign: TextAlign.justify)),
                   ),
                 ),
                 fit: FlexFit.tight,
-                flex: 1)
+                flex: 1),
+            isSpeaking
+                ? LinearPercentIndicator(
+                    percent: _currentTtsProgress > 1 ? 1 : _currentTtsProgress,
+                    lineHeight: 6,
+                    padding: EdgeInsets.all(0),
+                    clipLinearGradient: true,
+                    linearGradient:
+                        LinearGradient(colors: constColorsColourfulProgressBar),
+                    backgroundColor: constColorPrimary.withAlpha(50))
+                : Container(height: 0)
           ],
         ),
         bottomSheet: _isBottomSheetVisible
@@ -295,6 +305,7 @@ class _State extends State<Story> {
         setState(() {
           isSiLkPossible = isLanguageAvailable;
           _currentSentenceIndex = 0;
+          _currentTtsProgress = 0;
         });
         await _splitStory();
         await flutterTts.setLanguage(constTtsLanguage);
@@ -319,6 +330,14 @@ class _State extends State<Story> {
         });
         flutterTts.setErrorHandler((msg) async {
           await stopTTS();
+        });
+        flutterTts
+            .setProgressHandler((String text, int start, int end, String word) {
+          setState(() {
+            _currentTtsProgress =
+                ((_currentSentenceIndex + (end / text.length)) /
+                    _splitStoryList.length);
+          });
         });
       }
     }
@@ -349,6 +368,7 @@ class _State extends State<Story> {
       isPaused = false;
       isSpeaking = false;
       _currentSentenceIndex = 0;
+      _currentTtsProgress = 0;
     });
   }
 
