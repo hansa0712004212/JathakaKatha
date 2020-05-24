@@ -119,27 +119,21 @@ class _WelcomeState extends State<Welcome> {
   }
 
   List<Flexible> _initProgressBars() {
-    List<Color> progressBarColors = [
-      Color.fromARGB(255, 0, 0, 255),
-      Colors.yellow,
-      Colors.red,
-      Colors.white,
-      Colors.orange
-    ];
-
     List<Flexible> flexibleProgressBars = [];
-    progressBarColors.asMap().forEach((key, value) {
+    constColorsColourfulProgressBar.asMap().forEach((key, value) {
       flexibleProgressBars.add(Flexible(
         child: new LinearPercentIndicator(
             percent: 1,
             animation: true,
             animationDuration: _duration * 800,
-            progressColor: progressBarColors.elementAt(key),
+            progressColor: constColorsColourfulProgressBar.elementAt(key),
             padding: EdgeInsets.fromLTRB(
-                0, 0, key == progressBarColors.length - 1 ? 0 : 5, 0),
-            backgroundColor: progressBarColors.elementAt(key).withAlpha(100)),
+                0, 0, key == constColorsColourfulProgressBar.length - 1 ? 0 : 5, 0),
+            backgroundColor: constColorsColourfulProgressBar.elementAt(key).withAlpha(100)),
       ));
     });
     return flexibleProgressBars;
   }
+
+
 }
