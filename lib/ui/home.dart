@@ -207,7 +207,7 @@ class _HomeState extends State<Home> {
                       }).toList()),
                 ),
               ),
-              !_isRecentEnabled
+              !_isRecentEnabled && !(_searchKey.length > 0)
                   ? Padding(
                       padding: EdgeInsets.fromLTRB(
                           0, constPaddingSpace, 0, constPaddingSpace),
@@ -251,24 +251,31 @@ class _HomeState extends State<Home> {
                 }),
                 Container()
               }
-            : showDialog<bool>(
-                context: context,
-                builder: (c) => AlertDialog(
-                  title: Text(constExit),
-                  content: Text(constExitConfirmMessage),
-                  actions: [
-                    FlatButton(
-                      child: Text(constYes),
-                      onPressed: () => SystemChannels.platform
-                          .invokeMethod('SystemNavigator.pop'),
+            : _searchKey.length > 0
+                ? {
+                    setState(() {
+                      _searchKey = "";
+                    }),
+                    SystemChannels.textInput.invokeMethod('TextInput.hide')
+                  }
+                : showDialog<bool>(
+                    context: context,
+                    builder: (c) => AlertDialog(
+                      title: Text(constExit),
+                      content: Text(constExitConfirmMessage),
+                      actions: [
+                        FlatButton(
+                          child: Text(constYes),
+                          onPressed: () => SystemChannels.platform
+                              .invokeMethod('SystemNavigator.pop'),
+                        ),
+                        FlatButton(
+                          child: Text(constNo),
+                          onPressed: () => Navigator.pop(c, false),
+                        ),
+                      ],
                     ),
-                    FlatButton(
-                      child: Text(constNo),
-                      onPressed: () => Navigator.pop(c, false),
-                    ),
-                  ],
-                ),
-              );
+                  );
       },
     );
   }
