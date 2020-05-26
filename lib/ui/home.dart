@@ -298,10 +298,8 @@ class _HomeState extends State<Home> {
       return recentList.reversed.toList();
     } else {
       int selectedRange = _rangeToggle.indexOf(true);
-      return tales.sublist(
-          (selectedRange * 10),
-          ((selectedRange + 1) *
-              10)); //TODO change value 10 to 100 when stories are filled
+      return tales.sublist((selectedRange * 100),
+          ((selectedRange < 5) ? (selectedRange + 1) * 100 : tales.length));
     }
   }
 
