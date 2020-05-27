@@ -243,21 +243,44 @@ class _State extends State<Story> {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(widget.tale.image),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
                       gradient: LinearGradient(
                           colors: [
                             constColorPrimary.withAlpha(200),
-                            constColorDefaultText
+                            constColorDefaultText.withAlpha(230)
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          stops: [0.0001, 0.03])),
-                  child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: constPaddingSpace),
-                    child: SingleChildScrollView(
-                        child: Text("\n${widget.tale.story}\n",
-                            style: TextStyle(fontSize: _fontSizeStory),
-                            textAlign: TextAlign.justify)),
+                          stops: [0.0001, 0.03]),
+                    ),
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            colors: [
+                              constColorPrimary.withAlpha(200),
+                              constColorDefaultText.withAlpha(50)
+                            ],
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            stops: [0.0001, 0.03]),
+                      ),
+                      child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: constPaddingSpace),
+                        child: SingleChildScrollView(
+                            child: Text("\n${widget.tale.story}\n",
+                                style: TextStyle(fontSize: _fontSizeStory),
+                                textAlign: TextAlign.justify)),
+                      ),
+                    ),
                   ),
                 ),
                 fit: FlexFit.tight,
