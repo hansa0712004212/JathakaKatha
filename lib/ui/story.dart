@@ -3,6 +3,7 @@ import 'package:flutter_icomoon_icons/flutter_icomoon_icons.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:icon_shadow/icon_shadow.dart';
 import 'package:jathakakatha/component/CustomSliderThumbCircle.dart';
+import 'package:jathakakatha/data/constants.dart';
 import 'package:jathakakatha/data/sinhala.dart';
 import 'package:jathakakatha/model/AppPreference.dart';
 import 'package:jathakakatha/model/Tale.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jathakakatha/data/sinhala.dart';
+import 'package:jathakakatha/data/constants.dart';
 
 class CustomSliderThumbCircle extends SliderComponentShape {
   final double thumbRadius;

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:jathakakatha/data/sinhala.dart';
+import 'package:jathakakatha/data/constants.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class Welcome extends StatefulWidget {

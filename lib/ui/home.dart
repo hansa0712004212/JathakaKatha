@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icomoon_icons/flutter_icomoon_icons.dart';
 import 'package:icon_shadow/icon_shadow.dart';
+import 'package:jathakakatha/data/constants.dart';
 import 'package:jathakakatha/data/sinhala.dart';
 import 'package:jathakakatha/model/AppPreference.dart';
 import 'package:jathakakatha/model/Tale.dart';
@@ -320,7 +321,7 @@ class _HomeState extends State<Home> {
 
   List<Widget> _getToggleButtons() {
     List<String> toggleButtonText = [
-      "  1-\n100",
+      "1-\n100",
       "101-\n200",
       "201-\n300",
       "301-\n400",
@@ -335,29 +336,35 @@ class _HomeState extends State<Home> {
           child: new Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              new Text(
-                value,
-                style: TextStyle(
-                    color: _rangeToggle[key]
-                        ? constColorDefaultText
-                        : constColorPrimary,
-                    fontWeight:
-                        _rangeToggle[key] ? FontWeight.bold : FontWeight.normal,
-                    shadows: _rangeToggle[key]
-                        ? [
-                            Shadow(
-                              offset: Offset(0.0, 0.0),
-                              blurRadius: 2.5,
-                              color: constColorDefaultText,
-                            ),
-                          ]
-                        : [
-                            Shadow(
-                              offset: Offset(0.0, 0.0),
-                              blurRadius: 2.5,
-                              color: constColorPrimary,
-                            ),
-                          ]),
+              Expanded(
+                child: new Text(
+                  value,
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: constFontSizeTileTitle,
+                      color: _rangeToggle[key]
+                          ? constColorDefaultText
+                          : constColorPrimary,
+                      fontWeight: _rangeToggle[key]
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                      shadows: _rangeToggle[key]
+                          ? [
+                              Shadow(
+                                offset: Offset(0.0, 0.0),
+                                blurRadius: 2.5,
+                                color: constColorDefaultText,
+                              ),
+                            ]
+                          : [
+                              Shadow(
+                                offset: Offset(0.0, 0.0),
+                                blurRadius: 2.5,
+                                color: constColorPrimary,
+                              ),
+                            ]),
+                ),
               )
             ],
           )));

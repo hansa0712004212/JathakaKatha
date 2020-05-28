@@ -1,4 +1,4 @@
-import 'package:jathakakatha/data/sinhala.dart';
+import 'package:jathakakatha/data/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppPreference {
