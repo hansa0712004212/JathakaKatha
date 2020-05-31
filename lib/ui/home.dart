@@ -53,6 +53,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return WillPopScope(
       child: Scaffold(
+        backgroundColor: constColorPrimary,
         appBar: AppBar(
           elevation: 0,
           bottomOpacity: 1.0,
