@@ -12,6 +12,7 @@ final String constExitConfirmMessage =
 final String constTtsLanguage = "si-LK";
 final int constTtsMaxLength = 3999;
 final double constShadowTextBlurRadius = 2;
+final String constAbout = "යෙදවුම පිලිබඳ";
 
 // Colors
 final Color constColorPrimary = Colors.amber;

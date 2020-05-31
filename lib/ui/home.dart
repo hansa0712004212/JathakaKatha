@@ -6,6 +6,7 @@ import 'package:jathakakatha/data/constants.dart';
 import 'package:jathakakatha/data/sinhala.dart';
 import 'package:jathakakatha/model/AppPreference.dart';
 import 'package:jathakakatha/model/Tale.dart';
+import 'package:jathakakatha/ui/about.dart';
 import 'package:jathakakatha/ui/story.dart';
 import 'package:global_configuration/global_configuration.dart';
 
@@ -69,6 +70,17 @@ class _HomeState extends State<Home> {
             child: Image(image: constImageAppIcon, fit: BoxFit.cover),
           ),
           actions: <Widget>[
+            IconButton(
+                icon: IconShadowWidget(
+                    Icon(IcoMoonIcons.info, color: constColorIcon),
+                    showShadow: true,
+                    shadowColor: constColorIcon),
+                color: constColorIcon,
+                splashColor: constColorIconSplash,
+                onPressed: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (_) => About()));
+                }),
             IconButton(
                 icon: IconShadowWidget(
                     Icon(
