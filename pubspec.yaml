@@ -33,9 +33,10 @@ dependencies:
   share: ^0.6.4+2
   icon_shadow: ^1.0.1
   percent_indicator: ^2.1.3
+  global_configuration: ^1.5.0
   shared_preferences: ^0.5.7+2
-  flutter_launcher_icons: ^0.7.5
   flutter_icomoon_icons: ^1.0.0
+  flutter_launcher_icons: ^0.7.5
 
 dev_dependencies:
   flutter_test:
@@ -56,6 +57,7 @@ flutter:
     - assets/
     - assets/stories/
     - assets/fonts/
+    - assets/cfg/
 
   fonts:
     - family: IskoolaPota
