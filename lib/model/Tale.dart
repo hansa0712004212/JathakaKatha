@@ -4,12 +4,14 @@ class Tale {
   final String story;
   final String image;
   final List<String> tags;
+  final List<int> connectedStories;
 
   Tale({
     this.id,
     this.title,
     this.story,
     this.image,
-    this.tags
+    this.tags,
+    this.connectedStories
   });
 }
