@@ -8,7 +8,6 @@ import 'package:jathakakatha/model/AppPreference.dart';
 import 'package:jathakakatha/model/Tale.dart';
 import 'package:jathakakatha/ui/about.dart';
 import 'package:jathakakatha/ui/story.dart';
-import 'package:global_configuration/global_configuration.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -27,7 +26,6 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    GlobalConfiguration().loadFromAsset("ad_keys");
     getSharedPreferences();
     _searchKey = "";
     _isRecentEnabled = false;
