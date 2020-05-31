@@ -1,6 +1,10 @@
+import 'dart:io';
+
+import 'package:facebook_audience_network/ad/ad_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icomoon_icons/flutter_icomoon_icons.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:icon_shadow/icon_shadow.dart';
 import 'package:jathakakatha/component/CustomSliderThumbCircle.dart';
 import 'package:jathakakatha/data/constants.dart';
@@ -295,7 +299,19 @@ class _State extends State<Story> {
                     linearGradient:
                         LinearGradient(colors: constColorsColourfulProgressBar),
                     backgroundColor: constColorPrimary.withAlpha(50))
-                : Container(height: 0)
+                : Container(height: 0),
+            Container(
+              alignment: Alignment(0.5, 1),
+              child: FacebookBannerAd(
+                placementId: Platform.isAndroid
+                    ? GlobalConfiguration().getString("StoryScreenBottom")
+                    : "",
+                bannerSize: BannerSize.STANDARD,
+                keepAlive: false,
+                key: Key(GlobalConfiguration().getString("StoryScreenBottom")),
+                listener: (result, value) {},
+              ),
+            )
           ],
         ),
         bottomSheet: _isBottomSheetVisible

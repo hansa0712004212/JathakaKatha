@@ -1,6 +1,8 @@
+import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icomoon_icons/flutter_icomoon_icons.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:icon_shadow/icon_shadow.dart';
 import 'package:jathakakatha/data/constants.dart';
 import 'package:jathakakatha/data/sinhala.dart';
@@ -50,6 +52,17 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    FacebookAudienceNetwork.init(
+        testingId: GlobalConfiguration().getString("FacebookAudienceNetwork"));
+
+    FacebookInterstitialAd.loadInterstitialAd(
+      placementId: GlobalConfiguration().getString("HomeScreenFull"),
+      listener: (result, value) {
+        if (result == InterstitialAdResult.LOADED)
+          FacebookInterstitialAd.showInterstitialAd(delay: constAdsHomeScreen);
+      },
+    );
+
     return WillPopScope(
       child: Scaffold(
         backgroundColor: constColorPrimary,

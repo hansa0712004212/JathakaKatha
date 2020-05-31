@@ -93,3 +93,7 @@ final List<Shadow> constDefaultTextShadow = <Shadow>[
   constShadowTextUpRight,
   constShadowTextUpLeft
 ];
+
+// Ad timer intervals
+final int constAdsHomeScreen = 6000;
+final int constAdsAboutScreen = 2000;

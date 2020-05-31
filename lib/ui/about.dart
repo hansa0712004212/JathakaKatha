@@ -1,4 +1,6 @@
+import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:jathakakatha/data/constants.dart';
 
 class About extends StatefulWidget {
@@ -8,7 +10,20 @@ class About extends StatefulWidget {
 
 class _AboutState extends State<About> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    FacebookInterstitialAd.loadInterstitialAd(
+      placementId: GlobalConfiguration().getString("AboutScreenFull"),
+      listener: (result, value) {
+        if (result == InterstitialAdResult.LOADED)
+          FacebookInterstitialAd.showInterstitialAd(delay: constAdsAboutScreen);
+      },
+    );
+
     return Scaffold(
       backgroundColor: constColorPrimary,
       appBar: AppBar(
